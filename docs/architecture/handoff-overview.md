@@ -66,7 +66,8 @@ flowchart LR
     OC -->|reassign / sweep| CM
     ST -->|wake| W
     WS --> WC
-    WC -->|filtered read| IS
+    WC -->|query index: Ready + owner| PB
+    WC -->|filtered read: verify authority| IS
     WC -->|append| CM
     W -->|work| PR
     PL -.->|installed via .claude/settings.json| O
@@ -97,7 +98,9 @@ sequenceDiagram
     Orc->>Brd: Add item (Status=Ready)
 
     Sch->>Wk: Wake: run /smaltworks:poll
-    Wk->>Iss: smalt poll (filter: author+assignee = owner, no active claim)
+    Wk->>Brd: smalt poll (index query: Status=Ready, assignee=owner, my repos)
+    Brd-->>Wk: candidate issues (hint only)
+    Wk->>Iss: smalt fetch-task (verify author+assignee = owner, no active claim)
     Wk->>Iss: smalt verify-fingerprint
     Wk->>Iss: Comment: smaltworks:claim v1 AGENT_WORKER=…
     Note over Wk: wait N seconds
@@ -155,6 +158,7 @@ stateDiagram-v2
 | D7 | Board | One shared user-owned Projects v2 board; fields are derived, comments are authoritative |
 | D8 | Fields | `Status` (single select), `AGENT_WORKER` (single select, role), `HEARTBEAT` (text, `id @ timestamp`) |
 | D9 | Implementation | Protocol logic in a `smalt` CLI; thin skills; hooks block bypass; shipped as a plugin from smaltworks |
+| D10 | Cross-repo index | Task issues live in their target repos; the shared board aggregates them across repos. Orchestrator adds every task to the board at creation. Workers find candidates by querying the board (one query, not one per repo), then verify authority on the issue itself. Fallback if board access fails: poll each repo. |
 
 ---
 
@@ -167,7 +171,7 @@ stateDiagram-v2
 | B1 | **GitHub API access from cloud sessions.** The provided GitHub tools cover issues/PRs but not Projects v2 (GraphQL); direct API access is limited. | Determines whether `smalt` can run inside sessions or only in Actions, and whether agents can write board fields. | Spike: from a cloud session, list issue comments with author metadata and update a test board item. |
 | B2 | **Plugin distribution to cloud sessions.** Can a session auto-install a plugin from the smaltworks repo (declared in a target repo's `.claude/settings.json`)? | Without it, skills/CLI/hooks must be copied into every repo and will drift. | Spike: declare the marketplace in a test repo, start a session, confirm skills and hooks load. |
 | B3 | **Board automation credentials.** Actions can't use `GITHUB_TOKEN` on a user-owned board; needs a PAT (likely classic, `project` scope). | A broad, long-lived token per repo; secret management and rotation. | Confirm whether fine-grained PATs work on user boards; otherwise document scope and rotation. |
-| B4 | **Shared API rate limit.** Every agent of a collaborator uses the same identity and so the same GitHub rate limit. | Polling many repos with many workers can exhaust it and stall everything. | Size polling cadence; prefer orchestrator → worker messaging over polling; cache in `smalt`. |
+| B4 | **Shared API rate limit.** Every agent of a collaborator uses the same identity and so the same GitHub rate limit. | Polling many repos with many workers can exhaust it and stall everything. | Poll via the board index (D10) rather than per repo; size cadence; prefer orchestrator → worker messaging; cache in `smalt`. |
 
 ### Design decisions still open
 
