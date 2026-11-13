@@ -1,27 +1,35 @@
-# Orchestrator / Worker Handoff — Architecture Overview (Draft)
+# Orchestrator / Worker Handoff — Architecture Overview (Draft r2)
 
 Status: **Draft for discussion** · Protocol version: `v1` (proposed)
 
-This document captures the handoff model agreed so far between an
-orchestrator agent and worker agents running as Claude cloud sessions, and
-lists the open issues that remain before the protocol can be finalised.
+This document captures the handoff model between orchestrator agents and
+worker agents running as Claude Code cloud sessions, working across multiple
+GitHub repositories on behalf of multiple trusted collaborators.
+
+**Revision 2 changes:** the orchestrator now directs work (starts or messages
+worker sessions) instead of workers competing for issues; polling is a safety
+net; edited/deleted protocol comments are detected; ADRs are central and flat;
+signatures are reserved for a future protocol version.
 
 ---
 
 ## 1. Principles
 
-1. **Communication is by GitHub issues.** Orchestrators open task issues in
-   the target repository; all coordination happens on that issue.
-2. **Authority lives in authored, append-only comments.** Project board
-   fields are derived views, never a source of truth.
-3. **Identity decisions are made in code**, from GitHub's recorded author
-   (`user.login`), never by the model reading text.
+1. **Use the harness for mechanics, GitHub for the record.** Claude's cloud
+   harness starts, wakes, messages and monitors sessions. GitHub issues, the
+   comment log and the shared board hold everything that must be durable,
+   visible to people, or shared between collaborators.
+2. **Authority lives in authored, unedited, append-only comments.** Board
+   fields and session messages are hints, never a source of truth.
+3. **Identity decisions are made in code** (`smalt` CLI) from GitHub's recorded
+   author (`user.login`) and edit metadata — never by the model reading text.
 4. **Ownership is two-level.** Coarse: issue author + assignee = owning
-   collaborator. Fine: the claim comment = owning agent.
+   collaborator. Fine: the winning claim comment = owning agent.
 5. **Workers act only on work from their own collaborator's identity.**
    Collaborators are trusted; the filter prevents cross-collaborator mistakes.
-6. **Protocol logic lives in a CLI (`smalt`)**; skills are thin wrappers that
-   say *when* to call it; hooks block bypassing it.
+6. **Thin skills, tested scripts, enforced hooks.** Protocol logic lives in
+   `smalt`; skills say when to call it; hooks block bypassing it. Shipped as a
+   plugin from smaltworks.
 
 ---
 
@@ -29,99 +37,113 @@ lists the open issues that remain before the protocol can be finalised.
 
 ```mermaid
 flowchart LR
-    subgraph C["Collaborator identity (e.g. stenhoor)"]
+    subgraph C["One collaborator identity (e.g. stenhoor) — repeated per collaborator"]
         H["Human collaborator"]
         subgraph O["Orchestrator session<br/>AGENT_ID=stenhoor/orchestrator-1"]
-            OS["Skills: plan-adr, create-task, sweep"]
+            OS["Skills: plan-adr, create-task,<br/>dispatch, sweep"]
             OC["smalt CLI"]
         end
-        subgraph W["Worker sessions (one per environment)<br/>AGENT_ID=stenhoor/worker-api-1"]
-            WS["Skills: poll, claim, heartbeat, release"]
+        subgraph W["Worker sessions<br/>AGENT_ID=stenhoor/worker-api-1 (env var)<br/>+ CLAUDE_CODE_REMOTE_SESSION_ID"]
+            WS["Skills: work-task, poll,<br/>claim, heartbeat, release"]
             WC["smalt CLI"]
             HK["Hooks: block raw issue reads"]
         end
-        ST["Scheduled tasks<br/>(wake workers)"]
+        ST["Scheduled task<br/>(safety-net poll)"]
     end
 
     subgraph SW["smaltworks repo"]
-        ADR["ADRs"]
-        PL["Plugin marketplace:<br/>smaltworks-protocol<br/>(skills + smalt CLI + hooks)"]
-        SPEC["Protocol spec"]
-        RW["Reusable Actions workflow:<br/>board sync"]
+        ADR["adr/NNNN-*.md<br/>(central, flat, repositories: field)"]
+        PL["Plugin: smaltworks-protocol<br/>(skills + smalt + hooks)"]
+        REG["Agent registry<br/>(roles, orchestrators;<br/>public keys later)"]
+        RW["Reusable workflow:<br/>board sync"]
     end
 
-    subgraph TR["Target repositories"]
+    subgraph TR["Target repositories (many)"]
         IS["Task issues<br/>(locked, assigned to owner)"]
-        CM["Comment log<br/>smaltworks:claim / release /<br/>reassign / heartbeat"]
-        GA["Actions: board sync<br/>(uses RW + PAT)"]
+        CM["Comment log<br/>smaltworks:* v1"]
+        GA["Actions: board sync"]
         PR["Branches / PRs"]
     end
 
-    PB[("Shared project board<br/>(user-owned)<br/>Status, AGENT_WORKER,<br/>HEARTBEAT, ADR, Milestone")]
+    PB[("Shared user-owned project board<br/>cross-repo index<br/>Status, AGENT_WORKER, HEARTBEAT,<br/>Repository, ADR, Milestone")]
 
     H -->|directs| O
     OS --> OC
     O -->|reads| ADR
-    OC -->|create + lock + assign| IS
-    OC -->|reassign / sweep| CM
+    O -->|reads| REG
+    OC -->|create, lock, assign, add| IS
+    OC -->|add item| PB
+    O ==>|start session / send message<br/>harness| W
+    W -.->|session failure events<br/>harness| O
+    OC -->|reassign, sweep| CM
     ST -->|wake| W
     WS --> WC
-    WC -->|query index: Ready + owner| PB
-    WC -->|filtered read: verify authority| IS
+    WC -->|filtered read, verify| IS
     WC -->|append| CM
+    WC -->|safety-net query| PB
     W -->|work| PR
     PL -.->|installed via .claude/settings.json| O
     PL -.->|installed via .claude/settings.json| W
     CM -->|issue_comment event| GA
     RW -.-> GA
     GA -->|derive fields| PB
-    O -->|reads status| PB
 ```
+
+Each collaborator runs their own orchestrator and workers. Harness messaging
+and session control work only within one Claude account, so collaborators
+coordinate with each other exclusively through issues and the shared board.
 
 ---
 
-## 3. Task lifecycle — create, claim, work
+## 3. Task lifecycle — dispatch, accept, work
 
 ```mermaid
 sequenceDiagram
     autonumber
-    participant Orc as Orchestrator<br/>(stenhoor/orchestrator-1)
-    participant Iss as Task issue<br/>(target repo)
-    participant Act as Actions board-sync
+    participant Orc as Orchestrator
+    participant Iss as Task issue (target repo)
     participant Brd as Project board
-    participant Sch as Scheduled task
-    participant Wk as Worker<br/>(stenhoor/worker-api-1/cse_…)
+    participant Wk as Worker session
+    participant Act as Actions board-sync
 
-    Orc->>Iss: Open issue from template (ORCHESTRATOR header)
-    Orc->>Iss: Lock, assign to stenhoor
-    Orc->>Iss: Comment: smaltworks:fingerprint v1 (hash of body)
+    Orc->>Iss: Open issue from template (ORCHESTRATOR, TARGET_AGENT headers)
+    Orc->>Iss: Lock, assign to owner login
+    Orc->>Iss: Comment smaltworks:fingerprint v1 (hash of body)
     Orc->>Brd: Add item (Status=Ready)
 
-    Sch->>Wk: Wake: run /smaltworks:poll
-    Wk->>Brd: smalt poll (index query: Status=Ready, assignee=owner, my repos)
-    Brd-->>Wk: candidate issues (hint only)
-    Wk->>Iss: smalt fetch-task (verify author+assignee = owner, no active claim)
-    Wk->>Iss: smalt verify-fingerprint
-    Wk->>Iss: Comment: smaltworks:claim v1 AGENT_WORKER=…
-    Note over Wk: wait N seconds
-    Wk->>Iss: smalt resolve-claim (earliest valid claim since last release/reassign)
-    alt won
-        Wk->>Iss: Comment: smaltworks:status v1 in-progress
-        Iss-->>Act: issue_comment event
-        Act->>Brd: Status=In progress, AGENT_WORKER=stenhoor/worker-api-1
-        loop while working
-            Wk->>Iss: smaltworks:heartbeat v1 (at checkpoints)
-            Act->>Brd: HEARTBEAT=…
-            Wk->>Iss: smalt resolve-claim (re-check before push/PR)
-        end
-        Wk->>Iss: Completion flow (TBD)
-    else lost
-        Note over Wk: Stop. Post nothing further.
+    alt role has a live session
+        Orc->>Wk: send message "work repo#N" (harness)
+    else no live session
+        Orc->>Wk: start session in role environment, prompt "/smaltworks:work-task repo#N"
     end
 
-    Orc->>Brd: sweep: stale HEARTBEAT?
-    Orc->>Iss: Comment: smaltworks:reassign v1 TO=open
+    Wk->>Wk: Check sender is a registered orchestrator session (platform metadata)
+    Wk->>Iss: smalt fetch-task
+    Note over Wk,Iss: verify author + assignee = owner, ORCHESTRATOR registered,<br/>TARGET_AGENT = my AGENT_ID, fingerprint matches,<br/>no edited protocol comments, no active claim
+    Wk->>Iss: Comment smaltworks:claim v1 AGENT_WORKER=role/session
+    Note over Wk: wait N seconds
+    Wk->>Iss: smalt resolve-claim
+    alt won
+        Wk->>Iss: Comment smaltworks:status v1 in-progress
+        Iss-->>Act: issue_comment event
+        Act->>Brd: Status, AGENT_WORKER, HEARTBEAT
+        loop while working
+            Wk->>Iss: smalt resolve-claim before each push / PR / status change
+            Wk->>Iss: smaltworks:heartbeat v1 at checkpoints
+        end
+        Wk->>Iss: Completion flow (TBD, F1)
+    else lost or verification failed
+        Note over Wk: Stop. Report to orchestrator by message if verification failed.
+    end
+
+    Wk-->>Orc: session failed (harness event)
+    Orc->>Iss: Comment smaltworks:reassign v1 (TO=role or open)
 ```
+
+**Safety net:** a scheduled task wakes each worker periodically to run
+`smalt poll`, which queries the board for `Status=Ready` tasks targeted at its
+role (one query across all repos), then verifies each on the issue exactly as
+above. This catches lost messages and sessions that were not running.
 
 ---
 
@@ -129,12 +151,12 @@ sequenceDiagram
 
 ```mermaid
 stateDiagram-v2
-    [*] --> Ready: orchestrator creates issue
+    [*] --> Ready: orchestrator creates and dispatches
     Ready --> Claimed: claim comment posted
     Claimed --> Ready: claim lost / release
     Claimed --> InProgress: claim verified
     InProgress --> Ready: release / reassign(open)
-    InProgress --> Claimed: reassign(TO=agent)
+    InProgress --> Claimed: reassign(TO=role)
     InProgress --> NeedsInfo: question raised (TBD)
     NeedsInfo --> InProgress: answered by owner (TBD)
     InProgress --> InReview: PR opened (TBD)
@@ -145,68 +167,96 @@ stateDiagram-v2
 
 ---
 
-## 5. Decisions so far
+## 5. Protocol comments (v1)
+
+All protocol comments start with a `smaltworks:<kind> v1` line, followed by
+`KEY: value` lines. Optional `PREV:` and `SIG:` lines are **reserved** for a
+future signed version (v2) and ignored in v1.
+
+| Kind | Posted by | Purpose |
+|---|---|---|
+| `fingerprint` | Orchestrator | Hash of the task body at creation or after an amendment |
+| `claim` | Worker | `AGENT_WORKER: <login>/<role>/<session id>` — accept the task |
+| `status` | Holder / orchestrator | Status transitions (authoritative; the board mirrors them) |
+| `heartbeat` | Holder | Liveness at checkpoints |
+| `release` | Holder | Give the task back; starts a new claim round |
+| `reassign` | Orchestrator | `TO: <role>` or `open`; starts a new claim round |
+
+**Validity rules (enforced by `smalt`):** a protocol comment counts only if
+its GitHub-recorded author is the issue owner's login, it parses exactly, its
+version is supported, and **it has never been edited**. The earliest valid
+claim after the latest release/reassign wins (ties broken by comment id).
+
+---
+
+## 6. Decisions
 
 | # | Area | Decision |
 |---|---|---|
 | D1 | Channel | GitHub issues in the target repo, opened only by orchestrators |
 | D2 | Protection | Task issues locked on creation (write-access only) |
 | D3 | Trust | Collaborators trusted; workers act only on content authored by their owner's login, filtered in code |
-| D4 | Agent identity | `AGENT_ID` env var (`<login>/<role>`) + `CLAUDE_CODE_REMOTE_SESSION_ID`; refuse to claim if either missing |
-| D5 | Claim | Append-only `smaltworks:claim v1` comment; earliest valid claim since last release/reassign wins; wait-then-verify |
-| D6 | Release / reassign | `smaltworks:release v1` (holder only), `smaltworks:reassign v1` (orchestrator only) open a new claim round |
-| D7 | Board | One shared user-owned Projects v2 board; fields are derived, comments are authoritative |
-| D8 | Fields | `Status` (single select), `AGENT_WORKER` (single select, role), `HEARTBEAT` (text, `id @ timestamp`) |
-| D9 | Implementation | Protocol logic in a `smalt` CLI; thin skills; hooks block bypass; shipped as a plugin from smaltworks |
-| D10 | Cross-repo index | Task issues live in their target repos; the shared board aggregates them across repos. Orchestrator adds every task to the board at creation. Workers find candidates by querying the board (one query, not one per repo), then verify authority on the issue itself. Fallback if board access fails: poll each repo. |
+| D4 | Agent identity | `AGENT_ID` env var (`<login>/<role>`, org-unique by login prefix) + `CLAUDE_CODE_REMOTE_SESSION_ID`; refuse to claim if either is missing |
+| D5 | Claim | Append-only `smaltworks:claim v1`; earliest valid claim since last release/reassign wins; wait-then-verify. With orchestrator dispatch this is mainly an acceptance record, and still resolves races |
+| D6 | Release / reassign | `release` (holder only), `reassign` (orchestrator only) start a new claim round |
+| D7 | Board | One shared user-owned Projects v2 board; fields derived from comments; orchestrator reconciles |
+| D8 | Fields | `Status` (single select), `AGENT_WORKER` (single select, `<login>/<role>`), `HEARTBEAT` (text, `id @ timestamp`), plus `ADR`, `Milestone`, built-in `Repository` |
+| D9 | Implementation | Protocol logic in `smalt` CLI; thin skills; hooks block bypass; plugin from smaltworks |
+| D10 | Cross-repo index | Issues live in target repos; the board aggregates them; orchestrator adds every task; polling queries the board, authority is verified on the issue |
+| D11 | Tamper detection | Edited protocol comments are invalid and flagged; orchestrator sweep detects deleted protocol comments by comparing with its last snapshot |
+| D12 | ADR home | Central and flat: `smaltworks/adr/NNNN-title.md` with a `repositories:` field, since one ADR may span several repos |
+| D13 | Dispatch | Orchestrator directs work: names a `TARGET_AGENT` role in the issue, then starts a worker session or messages a live one via the harness. Scheduled polling is a safety net only |
+| D14 | Messages | Harness messages are wake-up hints. Workers check the sender is a registered orchestrator session, then take all authority from the issue |
+| D15 | Recovery | Orchestrator reassigns (no automatic same-role takeover). Primary signal: harness session-failure events; secondary: stale heartbeat |
+| D16 | Cryptography | No shared-secret hash chain. Signatures (per-agent key pairs, public keys in the smaltworks registry) reserved for v2 via `PREV:`/`SIG:` lines, adopted only if the trust model tightens |
 
 ---
 
-## 6. Open issues
+## 7. Open issues
 
-### Blockers — must verify before building
+### Blockers — verify before building
 
-| # | Issue | Why it matters | Proposed next step |
-|---|---|---|---|
-| B1 | **GitHub API access from cloud sessions.** The provided GitHub tools cover issues/PRs but not Projects v2 (GraphQL); direct API access is limited. | Determines whether `smalt` can run inside sessions or only in Actions, and whether agents can write board fields. | Spike: from a cloud session, list issue comments with author metadata and update a test board item. |
-| B2 | **Plugin distribution to cloud sessions.** Can a session auto-install a plugin from the smaltworks repo (declared in a target repo's `.claude/settings.json`)? | Without it, skills/CLI/hooks must be copied into every repo and will drift. | Spike: declare the marketplace in a test repo, start a session, confirm skills and hooks load. |
-| B3 | **Board automation credentials.** Actions can't use `GITHUB_TOKEN` on a user-owned board; needs a PAT (likely classic, `project` scope). | A broad, long-lived token per repo; secret management and rotation. | Confirm whether fine-grained PATs work on user boards; otherwise document scope and rotation. |
-| B4 | **Shared API rate limit.** Every agent of a collaborator uses the same identity and so the same GitHub rate limit. | Polling many repos with many workers can exhaust it and stall everything. | Poll via the board index (D10) rather than per repo; size cadence; prefer orchestrator → worker messaging; cache in `smalt`. |
+| # | Issue | Next step |
+|---|---|---|
+| B1 | **GitHub API access from cloud sessions.** Provided GitHub tools cover issues/PRs but not Projects v2; direct API access is limited. Decides where `smalt` runs. | Spike: list comments with author + edit metadata; update a test board item. |
+| B2 | **Plugin distribution.** Does a session auto-install the smaltworks plugin declared in a target repo's `.claude/settings.json`? | Spike in a test repo. |
+| B3 | **Board automation credentials.** Actions on a user-owned board need a PAT (likely classic, `project` scope). | Confirm fine-grained PAT support; document scope and rotation. |
+| B4 | **Shared API rate limit** per collaborator identity. | Largely mitigated by D10/D13; size the safety-net poll cadence. |
+| B5 | **Harness orchestration.** Confirm an orchestrator session can start sessions in a named environment, message them, see sender metadata on the worker side, and receive failure events. | Spike: orchestrator starts and messages a test worker. |
 
 ### Design decisions still open
 
 | # | Issue | Options / notes |
 |---|---|---|
-| O1 | **Worker triggering.** | Scheduled polling (hourly minimum is typical), orchestrator messages the worker session directly, or both (message as fast path, poll as safety net). |
-| O2 | **Session lifecycle.** Who starts worker sessions, and how is "one live session per `AGENT_ID`" ensured? | One environment per role with `AGENT_ID` set; orchestrator starts/restarts sessions; detect duplicates via session id in claims. |
-| O3 | **Role takeover.** Can a new session with the same `AGENT_ID` resume its role's in-progress task, or must the orchestrator reassign? | Recommend: orchestrator reassigns (explicit, auditable). |
-| O4 | **Zombie holders.** After a reassign, the old session may still be alive and keep working. | `smalt resolve-claim` re-check required before every push, PR, or status change (fencing). Define which actions are checkpoints. |
-| O5 | **Timing parameters.** Claim wait N, heartbeat cadence, stale timeout. | Use GitHub server timestamps (comment `created_at`), not session clocks, for staleness. |
-| O6 | **Partial work on reassign.** What happens to the old holder's branch/PR? | Convention: branch name per task; new holder continues or restarts; release comment records branch state. |
-| O7 | **Fingerprint and legitimate edits.** Orchestrator may need to amend a task. | Orchestrator posts a new `smaltworks:fingerprint` (or `amend`) comment; workers re-verify and re-read. |
-| O8 | **Valid orchestrators.** How does a worker know an `ORCHESTRATOR` header is legitimate, and how is an orchestrator handed off? | Registry of orchestrator IDs per collaborator in smaltworks config; orchestrator handoff via the same release/claim pattern on a control issue? |
-| O9 | **Task issue template.** | Proposed fields: ADR ref, milestone, repo, acceptance criteria, dependencies, branch convention, expected output, protocol version. |
-| O10 | **Cross-repo dependencies.** | Orchestrator holds blocked tasks back vs. opens them with `Status=Blocked` and dependency links. |
-| O11 | **ADR home and mapping.** | ADRs move to `smaltworks/adr/<repo>/NNNN-*.md`? Is ADR → milestone → task stored in files, board fields, or both? GitHub milestones are per-repo. |
-| O12 | **Comment-format status changes.** Should every status change be a comment (authoritative) and the board purely derived? | Recommended, for consistency with D7; costs comment volume. |
-| O13 | **Hook coverage.** Exact list of tools/commands to block (GitHub MCP issue/comment reads, `gh`, `curl` to the API). | Needs to be tested; incomplete blocking silently reopens the injection path. |
-| O14 | **Protocol versioning and skew.** Collaborators may run different plugin versions. | Version in every comment (`v1`); `smalt` rejects unknown versions; upgrade policy. |
+| O2 | **Session model.** | (a) Fresh session per task — clean context, no zombies, slower start; (b) long-lived session per role — continuity, needs restarts and context management. Could mix: fresh per task by default. |
+| O4 | **Zombie holders.** | `smalt resolve-claim` before every push, PR or status change. Define the checkpoint list. Orchestrator may also interrupt or archive the old session after reassigning. |
+| O5 | **Timing parameters.** | Claim wait N, heartbeat cadence, stale timeout, poll cadence. Use GitHub server timestamps. |
+| O6 | **Partial work on reassign.** | Branch-per-task naming; release comment records branch state; new holder continues or restarts. |
+| O7 | **Amending a task.** | Orchestrator edits body then posts a new `fingerprint` comment; holder re-verifies and re-reads. |
+| O8 | **Orchestrator registry.** | Format and location of the registry of roles and orchestrator `AGENT_ID`s (and their current session ids) in smaltworks; how a worker learns the current orchestrator session. |
+| O9 | **Task issue template.** | Headers: `ORCHESTRATOR`, `TARGET_AGENT`, `ADR`, `MILESTONE`, protocol version. Body: goal, acceptance criteria, dependencies, branch convention, expected output. |
+| O10 | **Cross-repo dependencies.** | Hold blocked tasks back vs. create with `Status=Blocked` and links. |
+| O11 | **ADR → milestone → task mapping.** | ADR front matter vs. board fields vs. both; GitHub milestones are per-repo, so cross-repo milestones likely live on the board. |
+| O13 | **Hook coverage.** | Exact list of tools/commands to block; must be tested. |
+| O14 | **Protocol versioning.** | Version in every comment; `smalt` rejects unknown versions; plugin upgrade policy across collaborators. |
+| O15 | **Deletion detection.** | Where the orchestrator's snapshot lives (board field, smaltworks file, or a comment count) and what happens on detection. |
 
 ### Flows not yet designed
 
 | # | Flow |
 |---|---|
-| F1 | Completion: returning a finished work item (PR link, evidence, who accepts, closes issue) |
-| F2 | Needs-info: worker raises a question; who answers; how the answer is authenticated; resume |
-| F3 | Failure / abandon: worker cannot complete; error reporting |
-| F4 | Cancellation: orchestrator withdraws a task mid-flight |
-| F5 | Orchestrator handoff: moving an ADR's work between orchestrators |
+| F1 | Completion: returning a finished work item (PR link, evidence, who accepts, closing) |
+| F2 | Needs-info: worker raises a question; owner/orchestrator answers; resume |
+| F3 | Failure / abandon |
+| F4 | Cancellation by the orchestrator |
+| F5 | Orchestrator handoff between orchestrator sessions |
 
 ### Accepted / residual risks
 
 | # | Risk | Mitigation |
 |---|---|---|
-| R1 | Prompt injection via task inputs (code, docs, dependencies, PR reviews). | Treat as data; filter PR review comments by author too; narrow repo access per worker. |
-| R2 | A steered agent acting with its collaborator's full GitHub access. | Least-privilege repo attachment per session; only orchestrators create tasks. |
-| R3 | Board field changes are not author-attributed. | Fields are display only; orchestrator reconciles from comments. |
-| R4 | User-owned board is a single point of ownership. | Board is rebuildable from comment logs; migrate when the org exists. |
+| R1 | Prompt injection via task inputs (code, docs, dependencies, PR reviews). | Treat as data; filter PR review comments by author; narrow repo access per worker. |
+| R2 | A steered agent acts with its collaborator's full GitHub access and can post valid comments. | Least-privilege repo access per session; only orchestrators create tasks; signatures (D16) if needed later. |
+| R3 | Board fields are not author-attributed. | Display only; orchestrator reconciles from comments. |
+| R4 | User-owned board is a single point of ownership. | Rebuildable from comment logs; migrate when an org exists. |
+| R5 | Collaborators with write access can edit or delete protocol comments. | D11 detection; collaborators are trusted, so detect-and-flag rather than prevent. |
