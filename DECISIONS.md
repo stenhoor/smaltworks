@@ -238,3 +238,9 @@ Decided by the owner on 2026-11-15 as "for now" answers, expected to grow; none 
 - **Runs libraries, and launches the apps:** the engine, plugins and languages in the console itself, and the apps
   (smaltui, smaltbi, smaltnb) opened against the chosen versions.
 - **Browser first.** Node is likely to follow at some point; not decided, no date.
+- **Apps are published to npm as built apps,** like any package, so the console launches app X at version Y from the
+  same place it loads the libraries. (2026-11-15)
+- **Each profile keeps its own browser storage.** Moving data to another version is export then import, checked
+  against the storage-format contract, so a dev build can never touch a stable profile's data. (2026-11-15)
+- **The console is its own product:** its own repository and site, linked from smaltworks.dev, following the
+  standards like any other repository. (2026-11-15)
