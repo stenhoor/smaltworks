@@ -181,3 +181,34 @@ five-day-old copy.
 - **Session branches are never a default branch.** A new repository starts on `main`.
 - A repository's default branch is a GitHub setting (Settings → General → Default branch); a session can create
   `main` but can't change the setting.
+
+## Releases: independent packages, declared compatibility
+
+Decided by the owner on 2026-11-15, in an interview, after the coordinated 0.9.0 release had been in progress since
+2026-11-03 without going out. Lining up every repository for one release was judged too fragile for this many
+repositories.
+
+- **The coordinated 0.9.0 release is dropped.** It never went out. Packages release one at a time from here.
+- **Independent versions, declared compatibility.** Each package publishes from its own repository when it is ready.
+  `peerDependencies` ranges say what it works with.
+- **Contract versions.** The shared interfaces (the plugin API, the plan format) have versions of their own. Before
+  1.0, a breaking change bumps the package's minor version (0.9.x → 0.10.0) and, if it changes a shared interface,
+  that contract's version too. Consumers move when they are ready.
+- **Two channels on npm:** `dev` (prereleases, numbered in sequence) and `latest` (stable). Both are published **on
+  demand**, never automatically. Consumers pin dev builds exactly and use ranges for stable releases.
+- **The consumers are the family's own apps** until the interfaces are fixed at 1.0.0. Whether outside projects start
+  using the packages is checked on npm during on-demand reviews, not by standing monitoring.
+- **Package metadata in both places:** a `"smalt"` block in each `package.json` (layer, browser or Node, contracts
+  provided and required, how it registers) is the source; smaltworks generates a catalog from what is published.
+- **Publishing:** one workflow of our own, kept as a template in smaltworks and copied to each repository: no outside
+  code. Considered: Changesets and release-please (both outside code; both need custom steps for contracts and the
+  catalog anyway; release-please pushes towards continuous releases).
+- **Who publishes:** collaborators may publish **dev** builds of any package; a **stable** release is published only by
+  the package's owner. npm trusted publishing ties each package to its repository's workflow, so no tokens are shared.
+- **Where it shows:** npm holds the packages (what exists); each publish writes a GitHub release (what changed) and
+  regenerates the smaltworks catalog (the family view, and what is tested together).
+- **Release notes are consolidated.** They are drawn from the PRs merged since the last release, but written as one
+  set of notes in the release itself, Breaking first. Readers are not sent to a list of PRs or other documents to piece
+  it together.
+- **Separate repositories stay.** A monorepo for the engine group was considered and rejected: separate repositories
+  enforce the divisions of labour and code.
