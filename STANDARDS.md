@@ -103,3 +103,12 @@ Three badges, in `badges/plugins/`, say how a plugin relates to smaltdb:
 
 Every smalt repository's default branch is `main`, and work branches merge into it. A session's working branch
 (`claude/…`) is never a default branch. (DECISIONS.md, "Default branch: main", 2026-11-15.)
+
+## Versions and releases
+
+- Each package versions and releases on its own, from its own repository, on demand: `dev` for prereleases, `latest`
+  for stable. Packages under `@smaltworks` start at 0.14.0.
+- **Version numbers never indicate compatibility.** `peerDependencies` ranges and contract versions do.
+- Before 1.0, a breaking change bumps the minor version, and the version of any shared contract it changes.
+- Release notes are written as one consolidated set in the release, Breaking first, drawn from the merged PRs.
+- (DECISIONS.md, "Releases: independent packages, declared compatibility".)

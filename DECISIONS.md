@@ -212,3 +212,29 @@ repositories.
   it together.
 - **Separate repositories stay.** A monorepo for the engine group was considered and rejected: separate repositories
   enforce the divisions of labour and code.
+
+### Follow-ups, 2026-11-15
+
+- **Starting versions:** every package under `@smaltworks` starts at **0.14.0**, the furthest-along version (smaltty's),
+  as a one-time common baseline for the move to the new scope. From then on each package versions on its own.
+  **Version numbers never indicate compatibility**; contract versions and peer ranges do. Considered: each package
+  keeping its own number.
+- **The old `smaltdb` on npm** (0.8.3, unscoped) is deprecated with a pointer to `@smaltworks/smaltdb` once that is
+  published. Nothing is removed.
+- **Contracts at the start:** the plugin API (v1, smaltdb ADR 0013), the plan format (v0, experimental), the language
+  API, and the storage format.
+- **First dev publishes go from the engine outward:** smaltdb, then its plugins and the languages, then the kits; the
+  apps then replace their `packed.json` pins with published versions.
+
+## Web console: first scope (provisional)
+
+Decided by the owner on 2026-11-15 as "for now" answers, expected to grow; none is a firm boundary.
+
+- **The console is a browser page where people pick smalt components and versions and start working.** It loads
+  packages from npm (through a CDN) using the release channels above, checks the chosen set against peer ranges and
+  contracts, and pins it as a shareable profile.
+- **For now, for data users:** people who want to load data and query it in the browser. App builders, contributors
+  and internal use are likely later.
+- **Runs libraries, and launches the apps:** the engine, plugins and languages in the console itself, and the apps
+  (smaltui, smaltbi, smaltnb) opened against the chosen versions.
+- **Browser first.** Node is likely to follow at some point; not decided, no date.
