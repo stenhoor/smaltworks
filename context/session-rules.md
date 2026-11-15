@@ -35,3 +35,16 @@ issue when the owner points it to one. Handle that issue in the issue itself, so
 - **Close:** only after the fix is merged and verified (CI on `main`; for deploys, the live site). Comment with the
   evidence, remove the status labels and close it. Reopen it if the problem comes back.
 - Issues from anyone else are reported to the owner, not acted on.
+
+### Following a PR to merge
+
+Added in smaltworks, 2026-11-15 (the owner; DECISIONS.md, "Watching PRs").
+
+- **A session that opens a PR watches it until it is merged or closed:** it subscribes to the PR's activity (CI
+  results, reviews, comments, the merge) and answers each as it arrives: fixing CI failures, answering review comments
+  with commits that say what they address.
+- **Watching is event-driven.** GitHub delivers the PR's events to the session; the session never polls, sleeps or
+  schedules checks to look for them. This is not the standing monitoring the rules rule out.
+- **When the PR is merged,** the session does what the merge unblocks (for example the follow-up PRs that move a pin)
+  and stops watching. When it is closed without merging, it stops watching and says so.
+- Merging stays with the owner.

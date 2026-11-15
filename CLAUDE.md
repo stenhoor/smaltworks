@@ -20,6 +20,8 @@ every repository follows, and the exceptions to them. Start with [README.md](REA
   `reviews/` or in the conversation) and made only after the owner's yes.
 - **No standing monitoring.** No scheduled checks, polling or automation that spends tokens to watch for work. Reviews
   run when the owner asks for one.
+- **Watch your PRs to the merge.** A PR you open is followed through its events (CI, reviews, the merge), not by
+  polling ([context/session-rules.md](context/session-rules.md#following-a-pr-to-merge)).
 
 ## Working rules for sessions
 

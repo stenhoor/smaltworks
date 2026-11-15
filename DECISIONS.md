@@ -360,3 +360,13 @@ Decided by the owner on 2026-11-15, on the [dependency audit](reviews/2026-11-15
   download (branch `claude/no-jsdelivr` in smaltkit, version 0.14.0). (The owner, 2026-11-15.)
 - **smaltbi drops its unused `hyparquet-compressors`** (branch `claude/drop-hyparquet-compressors` in smaltbi).
   (The owner, 2026-11-15.)
+
+## Watching PRs
+
+Decided by the owner on 2026-11-15, for consistency across the family.
+
+- **A session that opens a PR watches it through to the merge:** it subscribes to the PR's events, fixes CI failures
+  and answers reviews as they arrive, does what the merge unblocks, and then stops watching. Recorded in
+  [context/session-rules.md](context/session-rules.md#following-a-pr-to-merge).
+- **This is event-driven, not monitoring:** GitHub pushes the PR's events to the session; nothing polls or runs on a
+  schedule, so the "no standing monitoring" rule still holds.
