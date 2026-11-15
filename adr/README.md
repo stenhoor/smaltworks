@@ -11,8 +11,8 @@ The index of every smalt ADR, in every repository, and the home of the project-w
 
 When in doubt, it is tier 1. A tier 2 ADR that turns out to bind other repositories is moved here.
 
-The tiers below were assigned on 2026-11-15 by the rule above, from the titles and contents, and are **for the owner
-to confirm**.
+The tiers below were assigned on 2026-11-15 by the rule above and accepted by the owner the same day, except for the
+records under [Conflicts](#conflicts), which wait for the owner.
 
 ## Numbering
 
@@ -36,6 +36,24 @@ Known irregularities, kept as they are:
   it, and take shared numbers from now on.
 - **ADR 0024** is in smaltml and in smalt-brand. smaltml's copy is the newer one (amended by ADR 0034 and 0036); the
   copy here is smaltml's. smalt-brand's is out of date.
+
+## Conflicts
+
+Tier 1 records that conflict with another record or with a later decision, found on 2026-11-15. Each waits for the
+owner; until then the later decision applies.
+
+| # | Record | Says | Conflicts with |
+| --- | --- | --- | --- |
+| 1 | smaltdb 0012, 0013 | The core and its plugins release together, with the same version, in the `@smaltdb` scope; the publish plan is 0.9.0 | Independent releases, `@smaltworks` names, the 0.14.0 baseline, and the dropped 0.9.0 ([DECISIONS.md](../DECISIONS.md#releases-independent-packages-declared-compatibility)) |
+| 2 | smaltdb 0015 | smaltdb, smaltql and smaltdf publish together; a smaltdb release names the language versions it was tested with; steps 11–12 publish 0.9.0 | Independent releases. Its "tested with" idea survives as the smaltworks catalog's tested sets |
+| 3 | smaltfl 0017 | smaltfl builds on each family repository at its latest `main` (`deps:latest` moves every pin to the branch head) | Published versions instead of commit pins, and "dependencies come from the family" as published packages |
+| 4 | smaltfl 0005 | `Copyright (c) 2026 smaltfl contributors`, and says the family uses "smaltdb contributors" | `Copyright (c) 2026 smaltworks contributors` everywhere ([STANDARDS.md](../STANDARDS.md#node-tests-branches-licence-and-dependencies)) |
+| 5 | smaltcy 0001 and smaltdb 0033 (proposed) | smaltcy 0001: smaltcy has its own engine and pluggable stores. 0033: Cypher runs on smaltdb only, and smaltcy's engine goes | Each other. 0033 is proposed, so 0001 stands until 0033 is decided |
+| 6 | smaltml 0035 (proposed) | smaltml-simd: WebAssembly SIMD kernels of our own, in a plugin | The goal's common language, TypeScript, and smaltty's "TypeScript only: no Rust and no WebAssembly" ([DECISIONS.md](../DECISIONS.md#smaltty-typescript-without-outside-code)). smaltml 0024 left this to the owner |
+| 7 | smaltgl 0001, 0003 | smaltgl is "a product of its own"; its home is settled as `stenhoor/smalt-geo` | smaltgl is in the kits layer, and its repository is `stenhoor/smaltgl` |
+| 8 | smaltbi 0008 (proposed) | Reports may load plugins from other sites at run time, pinned by hash, after the reader agrees | The outside-code rule, which names loading code from another site at run time. Needs an explicit exception or a change |
+| 9 | smaltts 0023 | Its milestones re-base on, and publish with, smaltdb 0.9.0; vitest is allowed for tests | Minor: 0.9.0 is dropped (the code it names exists; the coordinated release doesn't). vitest is a recorded exception, so no conflict there |
+| 10 | smaltbi 0005 | smalt-brand is consumed as an npm package of static assets | Minor, and smalt-brand's call: the site kit is copied, not packaged (review 2, section 4) |
 
 ## Imported records
 

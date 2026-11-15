@@ -282,3 +282,17 @@ Decided by the owner on 2026-11-15, in interviews on the drift reviews.
 - **Dependencies come from the family:** a family repository depends only on `stenhoor` repositories or published
   `@smaltworks` packages. Anything else, such as a fork, is a recorded exception. smaltgl's dependencies on
   `apbeers/smaltkit` and `apbeers/smalt-graph-db` move to the family repositories.
+
+## Tracking and visibility
+
+Decided by the owner on 2026-11-15.
+
+- **Issues for project-wide (tier 1) work live in smaltworks;** WORK.md stays the register. smaltql #30–#32 (tracking
+  the smaltml and smaltai ADRs) move here.
+- **Facts about other repositories live only in smaltworks:** the family table and a dependency map in CONTEXT.md.
+  Each repository's `CLAUDE.md` keeps its own rules and points here.
+- **smaltworks keeps a decision queue** (what waits on the owner, oldest first), **a conformance table** (repository ×
+  standard) and **a dependency map** (who depends on what, at which version or pin). All three are updated when a review
+  runs, never by monitoring.
+- **ADR tiers:** the tiers drafted on 2026-11-15 are accepted, except where a record conflicts with another record or
+  with a later decision; those are listed in [adr/README.md](adr/README.md#conflicts) for the owner.
