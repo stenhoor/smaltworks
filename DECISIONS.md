@@ -390,3 +390,11 @@ changelog); the npm registry serves package metadata and tarballs with `Access-C
 directly), so the console can fetch from it; hyparquet ships its own JavaScript Snappy decoder (`src/snappy.js`).
 Relabelled as an assumption: what npm trusted publishing guarantees (npm's documentation couldn't be reached from
 this session). Reworded: the shared-memory mode is no longer called "faster", since that wasn't measured.
+
+## Google Fonts in the apps
+
+Decided by the owner on 2026-11-15, on the [dependency audit](reviews/2026-11-15-dependency-audit.md).
+
+- **The apps may keep loading the brand fonts from Google Fonts,** as a recorded exception
+  ([EXCEPTIONS.md](EXCEPTIONS.md)): they are fonts, not code, and the owner isn't concerned about it. It applies to
+  smaltui, smaltbi, smaltnb and smaltfl. smaltworks.dev's fonts are smalt-brand's call.
