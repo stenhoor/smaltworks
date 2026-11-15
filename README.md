@@ -1,6 +1,6 @@
 # smaltworks
 
-The direction hub for the smalt projects: one place for the goal, the project-wide decisions and ADRs, the standards
+The centralized direction for the smalt projects: one place for the goal, the project-wide decisions and ADRs, the standards
 every repository follows, and the exceptions to them.
 
 ## The goal

@@ -70,7 +70,7 @@ In each repository's `CLAUDE.md`, add a short first section, the same way they p
 
 One PR per repository, 19 repositories (all with a `CLAUDE.md`). Nothing else in them changes in this step.
 
-### B. Remove the originals (the removal PRs, after this hub is merged)
+### B. Remove the originals (the removal PRs, after these smaltworks changes are merged)
 
 - **smalt-brand:** replace `WORK.md`, ADRs 0024–0026 and 0032, the release notes and the release-notes template with
   links here; trim the direction sections out of `DECISIONS.md` and `BRAND.md`, leaving the brand parts and a link.

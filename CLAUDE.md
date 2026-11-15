@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-smaltworks is the direction hub for the smalt projects: the goal, the project-wide decisions and ADRs, the standards
+smaltworks is the centralized direction for the smalt projects: the goal, the project-wide decisions and ADRs, the standards
 every repository follows, and the exceptions to them. Start with [README.md](README.md) and [CONTEXT.md](CONTEXT.md).
 
 ## Rules for this repository
@@ -16,7 +16,7 @@ every repository follows, and the exceptions to them. Start with [README.md](REA
 - **Copies stay unchanged.** Files under `adr/imported/` are copies of records in other repositories, with their source
   noted at the top. Don't edit them; a change to one becomes a new ADR, or an amendment in a PR that also updates the
   source until it is removed.
-- **Ask before changing another repository.** Changes this hub implies for other repositories are proposed first (in
+- **Ask before changing another repository.** Changes smaltworks implies for other repositories are proposed first (in
   `reviews/` or in the conversation) and made only after the owner's yes.
 - **No standing monitoring.** No scheduled checks, polling or automation that spends tokens to watch for work. Reviews
   run when the owner asks for one.
