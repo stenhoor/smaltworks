@@ -169,3 +169,15 @@ with other work, and smalt-brand had no place for it.
   there is one copy to review. Copying the ADR into smalt-brand, and a tracking issue, were considered.
 - **Sessions keep it current.** A session that opens, advances or finishes such work updates its row in a smalt-brand
   PR, as product sessions already do for the status page.
+
+## Default branch: main
+
+Decided by the owner on 2026-11-15, when the drift review found smaltdf's default branch was still
+`claude/initial-design`, a session's working branch, while its work had moved on to `main`: a PR merged into the old
+default (stenhoor/smaltdf#24, the outside-code rule) never reached `main`, and anyone opening the repository saw a
+five-day-old copy.
+
+- **Every smalt repository's default branch is `main`.** Work branches merge into it.
+- **Session branches are never a default branch.** A new repository starts on `main`.
+- A repository's default branch is a GitHub setting (Settings → General → Default branch); a session can create
+  `main` but can't change the setting.

@@ -44,7 +44,7 @@ What follows from it, as already decided (the records are linked):
 | [smaltdb-node](https://github.com/stenhoor/smaltdb-node) | Engine plugin | Files on disk in Node.js | `@smaltworks/smaltdb-node` |
 | [smaltdb-sucrase](https://github.com/stenhoor/smaltdb-sucrase) | Engine plugin | Retired: replaced by smaltty; kept for reference | `@smaltworks/smaltdb-sucrase` |
 | [smaltql](https://github.com/stenhoor/smaltql) | Languages | SQL | `@smaltworks/smaltql` |
-| [smaltdf](https://github.com/stenhoor/smaltdf) | Languages | Dataframes | `@smaltdb/df` |
+| [smaltdf](https://github.com/stenhoor/smaltdf) | Languages | Dataframes | `@smaltworks/smaltdf` |
 | [smaltts](https://github.com/stenhoor/smaltts) | Languages | The typed API | `@smaltworks/smaltts` (private) |
 | [smaltcy](https://github.com/stenhoor/smaltcy) | Languages | Cypher and graphs | `@smaltworks/smaltcy` |
 | [smaltkit](https://github.com/stenhoor/smaltkit) | Kits | The reusable components of the apps | `smaltkit` |

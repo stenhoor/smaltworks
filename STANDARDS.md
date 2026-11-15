@@ -98,3 +98,8 @@ Three badges, in `badges/plugins/`, say how a plugin relates to smaltdb:
 - Official and Verified badges link to the plugin's entry on smaltdb.dev/plugins, the list smaltworks controls. A badge image alone proves nothing, since anyone can copy it.
 - Verified means the compatibility tests pass for that API version. It is not a security review, and the list page says so.
 - The `@smaltworks` npm scope and names that start with `smalt` are reserved for smaltworks. Third-party plugins are named `<product>-plugin-<name>`, for example `smaltdb-plugin-geo`.
+
+## Default branch
+
+Every smalt repository's default branch is `main`, and work branches merge into it. A session's working branch
+(`claude/…`) is never a default branch. (DECISIONS.md, "Default branch: main", 2026-11-15.)

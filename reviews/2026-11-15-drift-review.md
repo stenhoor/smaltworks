@@ -1,7 +1,8 @@
 # Drift review, 2026-11-15
 
 A review of the 22 smalt repositories against the rules now collected in smaltworks, from shallow clones of each
-repository's default branch on 2026-11-15. Nothing in any other repository has been changed. Every change proposed here
+repository's default branch on 2026-11-15. For smaltdf, whose default branch was a stale session branch, the facts
+below are from `main` (corrected the same day). Nothing in any other repository has been changed. Every change proposed here
 waits for the owner's yes.
 
 ## Findings
@@ -32,9 +33,9 @@ Direction was spread over three places:
 
 | Rule | Drift |
 | --- | --- |
-| npm names: `@smaltworks/<repository>` | Published or publishable under other names: `smaltdb`, `smaltkit`, `smaltnb` (unscoped); `@smaltdb/io`, `@smaltdb/external`, `@smaltdb/parquet`, `@smaltdb/df`. The renames are planned for 0.9.0 (smaltdb ADR 0015 step 11) |
-| TypeScript: checking on 7.0, emitting on 6.0.3 for one more release | **Behind:** smaltdb-node and smaltdf are on TypeScript 5.9. **Ahead:** smaltgl is on 7.1.0-beta. **All on 7:** smaltcy, smaltml, smaltbi and smaltui use 7 for everything, including any emitting. **None:** smaltts has no TypeScript and no `typecheck` (by its M0 decision: tooling from smaltty) |
-| Outside code: the rule word for word in every `CLAUDE.md` | Missing from smaltcy, smaltfl, smaltgl and smaltml |
+| npm names: `@smaltworks/<repository>` | Published or publishable under other names: `smaltdb`, `smaltkit`, `smaltnb` (unscoped); `@smaltdb/io`, `@smaltdb/external`, `@smaltdb/parquet`. The renames are planned for 0.9.0 (smaltdb ADR 0015 step 11) |
+| TypeScript: checking on 7.0, emitting on 6.0.3 for one more release | **Behind:** smaltdb-node is on TypeScript 5.9. **Ahead:** smaltgl is on 7.1.0-beta. **All on 7:** smaltcy, smaltml, smaltbi and smaltui use 7 for everything, including any emitting. **None:** smaltts has no TypeScript and no `typecheck` (by its M0 decision: tooling from smaltty) |
+| Outside code: the rule word for word in every `CLAUDE.md` | Missing from smaltcy, smaltfl, smaltgl and smaltml, and from smaltdf's `main` (stenhoor/smaltdf#24 added it to the stale `claude/initial-design` instead) |
 | Session rules ("Issues") | Missing from the `CLAUDE.md` of smaltcy, smaltgl, smaltml, smaltkit, smaltnb, smaltts, smaltty and smaltui. The newest repositories (smaltcy, smaltgl, smaltml) use a different `CLAUDE.md` layout from the rest |
 | Engine compatibility | Most packages require smaltdb `>=0.9.0 <0.10.0`; smaltgl requires `^0.8.3`; smaltkit allows `>=0.8.3 <0.10.0` |
 | Broken reference | smaltnb's peer dependency is `smaltql`, but the package is `@smaltworks/smaltql` |
@@ -46,7 +47,7 @@ Direction was spread over three places:
 | Node version (`engines`) | `>=20` (most), `>=22.18` (smaltkit, smaltnb, smaltty, smaltdb-sucrase), none (smaltbi, smaltui) |
 | Test runner | vitest (most); `node --test` (smaltbi, smaltkit, smaltty, smaltdb-sucrase); a script of its own (smaltui) |
 | Licence holder | All MIT, with three copyright lines: "Steve TenHoor" (14), "smaltdb contributors" (5), "smaltfl contributors" / "smaltql contributors". smalt-brand has no `LICENSE` |
-| Default branch | `main` everywhere except **smaltdf, whose only branch is `claude/initial-design`** |
+| Default branch | `main` everywhere except **smaltdf**, whose default is `claude/initial-design`: 5 days stale, while `main` is 63 commits ahead. Now a standard (STANDARDS.md, "Default branch") |
 | Releases | Only smaltty has a release workflow |
 | Linting and formatting | None anywhere. Consistent; possibly on purpose under the outside-code rule |
 
@@ -82,10 +83,10 @@ One PR per repository, 19 repositories (all with a `CLAUDE.md`). Nothing else in
 
 | # | Repository | Change | Decision needed |
 | --- | --- | --- | --- |
-| C1 | smaltdf | Create `main` from `claude/initial-design` and make it the default branch | Yes, it's a repository setting |
+| C1 | smaltdf | Switch the default branch to `main` (a setting: the owner); bring stenhoor/smaltdf#24's outside-code rule onto `main`; then delete `claude/initial-design` | Approved 2026-11-15 for the switch; the rest waits for a yes |
 | C2 | smaltnb | Peer dependency `smaltql` → `@smaltworks/smaltql` | Or wait for the 0.9.0 renames |
 | C3 | smaltgl, smaltkit | smaltdb range → `>=0.9.0 <0.10.0` | Confirm 0.9 is the floor |
-| C4 | smaltdb-node, smaltdf | TypeScript 5.9 → the standard (check on 7.0, emit on 6.0.3) | — |
+| C4 | smaltdb-node | TypeScript 5.9 → the standard (check on 7.0, emit on 6.0.3) | — |
 | C5 | smaltgl | TypeScript 7.1 beta → 7.0, or record an exception | Which |
 | C6 | smaltcy, smaltml, smaltbi, smaltui | Emit `.d.ts` on 6.0.3 for one more release, or record that they don't emit `.d.ts` | Check each |
 | C7 | smaltts | Record "no TypeScript; tooling from smaltty" as an exception | Confirm |
