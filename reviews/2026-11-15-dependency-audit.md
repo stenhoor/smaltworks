@@ -68,8 +68,8 @@ Nothing in the development tools reaches a published package.
 
 ## Suggested next steps (for the owner)
 
-1. **hysnappy:** decide between an exception for the Parquet plugin (third-party WebAssembly, in a plugin, optional)
-   and dropping Snappy-via-WebAssembly in favour of hyparquet's own JavaScript decoder.
+1. ~~**hysnappy:** an exception, or drop it.~~ **Decided 2026-11-15: kept for now, as a recorded exception**
+   (EXCEPTIONS.md): it is in a plugin, not core, and provides a function plain JavaScript packages don't.
 2. **smaltkit's jsDelivr path:** remove it, or switch it to fetching from npm directly, as decided for the console.
 3. **Google Fonts in the apps:** self-host the fonts, or record an exception.
 4. **The family dependencies** above move to published ranges as each package is first published (ADR 0037).

@@ -347,3 +347,11 @@ Decided by the owner on 2026-11-15.
   `stenhoor/smaltgl` (renamed from `stenhoor/smalt-geo`, which still redirects).
 - **The smaltai ADRs (0025, 0026) stay in the queue.**
 - **smaltfl's proposed ADRs stay with smaltfl's maintainers;** they leave the owner's queue.
+
+## Dependency audit: the Parquet plugin
+
+Decided by the owner on 2026-11-15, on the [dependency audit](reviews/2026-11-15-dependency-audit.md).
+
+- **smaltdb-parquet keeps `hyparquet-compressors` (with `hysnappy`'s WebAssembly) for now,** as a recorded exception
+  to WebAssembly criterion 3: it is in a plugin, not core code, and it provides a function that plain JavaScript
+  packages don't.
