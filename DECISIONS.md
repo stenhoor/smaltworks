@@ -244,3 +244,14 @@ Decided by the owner on 2026-11-15 as "for now" answers, expected to grow; none 
   against the storage-format contract, so a dev build can never touch a stable profile's data. (2026-11-15)
 - **The console is its own product:** its own repository and site, linked from smaltworks.dev, following the
   standards like any other repository. (2026-11-15)
+- **Default for data users:** the newest tested set of minor versions from the smaltworks catalog, taking the newest
+  patch release of each automatically (a patch is never breaking, by the release rules). Choosing versions is an
+  advanced option. (2026-11-15)
+- **Packages are fetched straight from an npm registry,** by the console's own code: npmjs.org by default, or a
+  registry the user configures, such as a company's npm mirror (JFrog Artifactory and the like). No third-party CDN.
+  A configured mirror must allow browser requests (CORS). (2026-11-15)
+- **Hosting is decided later.** The console is built to work on any static host. A host that can send cross-origin
+  isolation headers lets the engine use its faster shared-memory mode; without them it runs in its fallback mode.
+  (2026-11-15)
+- **No repository or product is named "hub",** and none uses a name that clashes with a programming language (such as
+  "go"). (2026-11-15)
