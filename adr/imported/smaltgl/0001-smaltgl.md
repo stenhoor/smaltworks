@@ -1,6 +1,6 @@
 # ADR 0001: smaltgl
 
-> **Copied** from [smaltgl/docs/adr/0001-smaltgl.md](https://github.com/stenhoor/smaltgl/blob/078f045e8575559b94e927e7de2d4a3fd48e7a07/docs/adr/0001-smaltgl.md) (commit `078f045`) on 2026-11-15. The source stays in place until its removal PR. Relative links were rewritten to resolve from smaltworks.
+> **Copied** from [smaltgl/docs/adr/0001-smaltgl.md](https://github.com/stenhoor/smaltgl/blob/21b8e1cfde650f9b5ead58f506fd8432736db726/docs/adr/0001-smaltgl.md) (commit `21b8e1c`) on 2026-11-15, refreshed after stenhoor/smaltgl#2 merged. The source stays in place until its removal PR. Relative links were rewritten to resolve from smaltworks.
 
 - **Status:** accepted (2026-11-12)
 - **Owner's decisions:** the name smaltgl; OpenStreetMap data through OpenFreeMap's tiles; our own drawing library;
@@ -18,6 +18,8 @@ changes every frame: filtering, binning, density, time.
 1. **A product of its own, smaltgl.** Location data on a map, in the browser, built on the family's databases.
    Tagline proposed: "Small. Alternative. Maps." Its mark and product colour are open: they go through smalt-brand's
    usual rounds first. Until then the site shows the wordmark in Martian Mono, as smaltcy's does.
+   *Amended 2026-11-15 (the owner, in [smaltworks](https://github.com/stenhoor/smaltworks/blob/main/DECISIONS.md)):
+   smaltgl sits in the kits layer, with smaltkit and smaltml.*
 2. **WebGPU only.** Compute shaders bin points, normalise heatmaps and (later) lay out labels, with nothing read back.
    WebGPU runs in Chrome and Edge, Safari 26 and Firefox on Windows; other browsers get a message rather than a
    slower second renderer. Revisit if a WebGL2 fallback is asked for.
@@ -35,7 +37,8 @@ changes every frame: filtering, binning, density, time.
 ## Open
 
 - The mark, the product colour and the social card (smalt-brand).
-- ~~The repository's final name and home.~~ Settled: `stenhoor/smalt-geo` ([ADR 0003](0003-visuals-in-smaltkit.md)).
+- ~~The repository's final name and home.~~ Settled: `stenhoor/smalt-geo` ([ADR 0003](0003-visuals-in-smaltkit.md)),
+  since renamed `stenhoor/smaltgl` (amended 2026-11-15; the old address redirects).
 - A globe view. (Labels along roads and rivers, and 3D with a tilting camera and extrusion, are done.)
 - GitHub Pages must be switched on once in the repository's settings (Source: GitHub Actions) for the docs to deploy.
 - A chart palette in smalt-brand: the ramps here are provisional, built from the Kiln tokens.

@@ -1,6 +1,6 @@
 # ADR 0003: The visualizations live in smaltkit
 
-> **Copied** from [smaltgl/docs/adr/0003-visuals-in-smaltkit.md](https://github.com/stenhoor/smaltgl/blob/078f045e8575559b94e927e7de2d4a3fd48e7a07/docs/adr/0003-visuals-in-smaltkit.md) (commit `078f045`) on 2026-11-15. The source stays in place until its removal PR. Relative links were rewritten to resolve from smaltworks.
+> **Copied** from [smaltgl/docs/adr/0003-visuals-in-smaltkit.md](https://github.com/stenhoor/smaltgl/blob/21b8e1cfde650f9b5ead58f506fd8432736db726/docs/adr/0003-visuals-in-smaltkit.md) (commit `21b8e1c`) on 2026-11-15, refreshed after stenhoor/smaltgl#2 merged. The source stays in place until its removal PR. Relative links were rewritten to resolve from smaltworks.
 
 - **Status:** accepted (2026-11-13)
 - **Owner's direction:** pull the visualization code into the shared kits: smaltbi will have visuals that draw data
@@ -30,8 +30,9 @@ smaltcy's WebGPU graph renderer only in smaltcy. An app that wanted either had t
 4. **Pinned, like the apps.** smaltgl depends on `smaltkit` at a commit. Until the kit's change is merged into
    stenhoor/smaltkit, that is a commit of the fork it was written on (`github:apbeers/smaltkit`, branch
    `claude/blissful-bohr-5k2i1i`); then the pin moves to stenhoor/smaltkit.
-5. **The product moves to stenhoor/smalt-geo.** What isn't drawing code (the docs, the demo, the datasets, the host
-   plugins, the browser tests) moves from `apbeers/smalt-Kepler-gl`, where it started, to `stenhoor/smalt-geo`.
+5. **The product moves to stenhoor/smalt-geo** (since renamed `stenhoor/smaltgl`, amended 2026-11-15; the old address
+   redirects). What isn't drawing code (the docs, the demo, the datasets, the host plugins, the browser tests) moves
+   from `apbeers/smalt-Kepler-gl`, where it started, to `stenhoor/smalt-geo`.
 
 ## Consequences
 
