@@ -255,3 +255,30 @@ Decided by the owner on 2026-11-15 as "for now" answers, expected to grow; none 
   (2026-11-15)
 - **No repository or product is named "hub",** and none uses a name that clashes with a programming language (such as
   "go"). (2026-11-15)
+
+## Standards from the review interviews
+
+Decided by the owner on 2026-11-15, in interviews on the drift reviews.
+
+- **The console's repository is `smaltup`.** The `-up` pattern of version pickers (`rustup`, `ghcup`); its tagline is
+  smalt-brand's call.
+- **Contracts start at:** plugin API v1, plan format v0 (experimental), **language API v1** (it already shipped with
+  smaltql's split, smaltdb ADR 0015), **storage format v3** (continuing formats 2 and 3 of smaltdb ADRs 0006 and 0007).
+- **Node: `>=22.18`** in every package: what CI tests, and the first Node 22 release that runs TypeScript files without
+  a flag. The untested `>=20` claims go.
+- **Tests: `node --test`** is the standard for new repositories: built into Node, no outside code. Repositories already
+  on vitest keep it as a recorded exception and move only when their tests are being changed anyway. No big-bang
+  migration. Browser tests stay our own scripts, as they already are everywhere. Considered: vitest family-wide (outside
+  code), and migrating every repository now.
+- **Branches:** GitHub's "Automatically delete head branches" is on in every repository, and branches already merged
+  are deleted once, from a list the owner approves.
+- **Copyright:** every `LICENSE` reads `Copyright (c) 2026 smaltworks contributors`. Each contributor keeps the
+  copyright in their own work; smaltworks.dev says who the contributors are (everyone in the projects' history).
+  Considered: "smaltworks" alone, which names a project rather than a person or entity.
+- **Empty repositories:** smalton and smaltml-simd are set up to the standards now (`CLAUDE.md`, licence, package, CI),
+  so they start aligned; smalt-test, which has no recorded purpose, is archived.
+- **smaltgl is in the kits layer,** with smaltkit and smaltml: a capability the apps use through smaltkit (smaltgl
+  ADR 0003). Its place in smalt-brand's family table follows.
+- **Dependencies come from the family:** a family repository depends only on `stenhoor` repositories or published
+  `@smaltworks` packages. Anything else, such as a fork, is a recorded exception. smaltgl's dependencies on
+  `apbeers/smaltkit` and `apbeers/smalt-graph-db` move to the family repositories.

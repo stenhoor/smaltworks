@@ -55,9 +55,10 @@ What follows from it, as already decided (the records are linked):
 | [smaltbi](https://github.com/stenhoor/smaltbi) | User tools | Reports and business intelligence | `smaltbi` (private) |
 | [smaltnb](https://github.com/stenhoor/smaltnb) | User tools | Notebooks | `smaltnb` |
 | [smaltfl](https://github.com/stenhoor/smaltfl) | User tools | Data pipelines (a shared project with its own maintainers) | `smaltfl` (private) |
-| [smaltgl](https://github.com/stenhoor/smaltgl) | Not yet placed | Maps on the GPU | `@smaltworks/smaltgl` |
+| [smaltgl](https://github.com/stenhoor/smaltgl) | Kits | Maps on the GPU | `@smaltworks/smaltgl` |
 | [smalton](https://github.com/stenhoor/smalton) | Not yet placed | Ontology; empty | – |
-| [smalt-test](https://github.com/stenhoor/smalt-test) | – | Empty; purpose not recorded | – |
+| [smalt-test](https://github.com/stenhoor/smalt-test) | – | Empty; to be archived (2026-11-15) | – |
+| smaltup | – | The web console: pick components and versions, start working in the browser; no repository yet | – |
 | smaltai | Alongside | The AI agent in the apps; no repository yet ([ADR 0025](adr/imported/smalt-brand/0025-smaltai-agent-gateways-and-actions.md), [0026](adr/imported/smalt-brand/0026-smaltai-in-browser-llm.md)) | – |
 | [smalt-brand](https://github.com/stenhoor/smalt-brand) | – | Brand and smaltworks.dev | – |
 | [smaltworks](https://github.com/stenhoor/smaltworks) | – | Direction: this repository | – |

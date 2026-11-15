@@ -112,3 +112,14 @@ Every smalt repository's default branch is `main`, and work branches merge into 
 - Before 1.0, a breaking change bumps the minor version, and the version of any shared contract it changes.
 - Release notes are written as one consolidated set in the release, Breaking first, drawn from the merged PRs.
 - (DECISIONS.md, "Releases: independent packages, declared compatibility".)
+
+## Node, tests, branches, licence and dependencies
+
+- **Node `>=22.18`** in every package's `engines`, and in CI.
+- **Tests run with `node --test`.** Browser tests are our own scripts. Repositories on vitest are listed in
+  [EXCEPTIONS.md](EXCEPTIONS.md).
+- **"Automatically delete head branches"** is on in every repository.
+- **Every `LICENSE` is MIT, `Copyright (c) 2026 smaltworks contributors`.**
+- **Dependencies come from the family:** `stenhoor` repositories or published `@smaltworks` packages only, unless
+  [EXCEPTIONS.md](EXCEPTIONS.md) lists the case.
+- (DECISIONS.md, "Standards from the review interviews", 2026-11-15.)
