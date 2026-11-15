@@ -204,7 +204,8 @@ repositories.
   code. Considered: Changesets and release-please (both outside code; both need custom steps for contracts and the
   catalog anyway; release-please pushes towards continuous releases).
 - **Who publishes:** collaborators may publish **dev** builds of any package; a **stable** release is published only by
-  the package's owner. npm trusted publishing ties each package to its repository's workflow, so no tokens are shared.
+  the package's owner. *Assumption, not yet confirmed: npm trusted publishing ties each package to its repository's
+  workflow, so no tokens are shared. To be checked against npm's documentation before the first publish.*
 - **Where it shows:** npm holds the packages (what exists); each publish writes a GitHub release (what changed) and
   regenerates the smaltworks catalog (the family view, and what is tested together).
 - **Release notes are consolidated.** They are drawn from the PRs merged since the last release, but written as one
@@ -251,7 +252,9 @@ Decided by the owner on 2026-11-15 as "for now" answers, expected to grow; none 
   registry the user configures, such as a company's npm mirror (JFrog Artifactory and the like). No third-party CDN.
   A configured mirror must allow browser requests (CORS). (2026-11-15)
 - **Hosting is decided later.** The console is built to work on any static host. A host that can send cross-origin
-  isolation headers lets the engine use its faster shared-memory mode; without them it runs in its fallback mode.
+  isolation headers lets the engine use its shared-memory mode (smaltdb checks `crossOriginIsolated` before using
+  `SharedArrayBuffer`); without them it runs in its fallback mode. How much faster the shared-memory mode is has not
+  been measured.
   (2026-11-15)
 - **No repository or product is named "hub",** and none uses a name that clashes with a programming language (such as
   "go"). (2026-11-15)
@@ -370,3 +373,20 @@ Decided by the owner on 2026-11-15, for consistency across the family.
   [context/session-rules.md](context/session-rules.md#following-a-pr-to-merge).
 - **This is event-driven, not monitoring:** GitHub pushes the PR's events to the session; nothing polls or runs on a
   schedule, so the "no standing monitoring" rule still holds.
+
+## Facts only
+
+Decided by the owner on 2026-11-15: sessions had a habit of guessing.
+
+- **State only what you have confirmed:** checked in the code, a command's output, a document read in this session, or
+  GitHub itself. Say how it was confirmed when it isn't obvious.
+- **Anything else is labelled as an assumption,** in those words, with what would confirm it. Never present a guess,
+  a memory of how a tool usually works, or a likely cause as a fact.
+- **When a fact turns out wrong, correct it where it was written,** and say so.
+- Recorded in [context/session-rules.md](context/session-rules.md#facts-only).
+
+Checked the same day against this rule: Node 22.18.0 is the release where type stripping became the default (Node's
+changelog); the npm registry serves package metadata and tarballs with `Access-Control-Allow-Origin: *` (requested
+directly), so the console can fetch from it; hyparquet ships its own JavaScript Snappy decoder (`src/snappy.js`).
+Relabelled as an assumption: what npm trusted publishing guarantees (npm's documentation couldn't be reached from
+this session). Reworded: the shared-memory mode is no longer called "faster", since that wasn't measured.

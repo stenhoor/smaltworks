@@ -48,3 +48,15 @@ Added in smaltworks, 2026-11-15 (the owner; DECISIONS.md, "Watching PRs").
 - **When the PR is merged,** the session does what the merge unblocks (for example the follow-up PRs that move a pin)
   and stops watching. When it is closed without merging, it stops watching and says so.
 - Merging stays with the owner.
+
+### Facts only
+
+Added in smaltworks, 2026-11-15 (the owner; DECISIONS.md, "Facts only").
+
+- **Don't tell the owner something you haven't confirmed.** A fact comes from the code, a command's output, a document
+  you read in this session, or GitHub itself; say which when it isn't obvious.
+- **Label everything else as an assumption,** in those words, and say what would confirm it. A memory of how a tool
+  usually works, a likely cause or a guess at a number is an assumption until checked.
+- **Check before asserting when checking is cheap.** Prefer running the command or reading the file to reasoning
+  about what it probably says.
+- **Correct a wrong fact where you wrote it,** and tell the owner.
