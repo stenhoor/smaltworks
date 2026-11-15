@@ -355,3 +355,8 @@ Decided by the owner on 2026-11-15, on the [dependency audit](reviews/2026-11-15
 - **smaltdb-parquet keeps `hyparquet-compressors` (with `hysnappy`'s WebAssembly) for now,** as a recorded exception
   to WebAssembly criterion 3: it is in a plugin, not core code, and it provides a function that plain JavaScript
   packages don't.
+- **No jsDelivr, or any CDN, for loading our code.** smaltkit's engine loader no longer loads smaltdb from jsDelivr:
+  the `npm` and `npm@<version>` engine specs are refused, and a missing vendor copy is an error instead of a silent
+  download (branch `claude/no-jsdelivr` in smaltkit, version 0.14.0). (The owner, 2026-11-15.)
+- **smaltbi drops its unused `hyparquet-compressors`** (branch `claude/drop-hyparquet-compressors` in smaltbi).
+  (The owner, 2026-11-15.)

@@ -70,7 +70,8 @@ Nothing in the development tools reaches a published package.
 
 1. ~~**hysnappy:** an exception, or drop it.~~ **Decided 2026-11-15: kept for now, as a recorded exception**
    (EXCEPTIONS.md): it is in a plugin, not core, and provides a function plain JavaScript packages don't.
-2. **smaltkit's jsDelivr path:** remove it, or switch it to fetching from npm directly, as decided for the console.
+2. ~~**smaltkit's jsDelivr path.**~~ **Decided 2026-11-15: removed** (smaltkit branch `claude/no-jsdelivr`).
 3. **Google Fonts in the apps:** self-host the fonts, or record an exception.
 4. **The family dependencies** above move to published ranges as each package is first published (ADR 0037).
-5. **smaltbi:** drop the unused `hyparquet-compressors`.
+5. ~~**smaltbi:** drop the unused `hyparquet-compressors`.~~ **Done 2026-11-15** (smaltbi branch
+   `claude/drop-hyparquet-compressors`).
