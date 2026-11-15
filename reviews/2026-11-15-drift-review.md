@@ -83,7 +83,7 @@ One PR per repository, 19 repositories (all with a `CLAUDE.md`). Nothing else in
 
 | # | Repository | Change | Decision needed |
 | --- | --- | --- | --- |
-| C1 | smaltdf | Switch the default branch to `main` (a setting: the owner); bring stenhoor/smaltdf#24's outside-code rule onto `main`; then delete `claude/initial-design` | Approved 2026-11-15 for the switch; the rest waits for a yes |
+| C1 | smaltdf | ~~Switch the default branch to `main`~~ **done by the owner, 2026-11-15**; the outside-code rule onto `main` (stenhoor/smaltdf#35); delete `claude/initial-design` (approved 2026-11-15; the owner deletes it, since a session's delete was refused) | – |
 | C2 | smaltnb | Peer dependency `smaltql` → `@smaltworks/smaltql` | Or wait for the 0.9.0 renames |
 | C3 | smaltgl, smaltkit | smaltdb range → `>=0.9.0 <0.10.0` | Confirm 0.9 is the floor |
 | C4 | smaltdb-node | TypeScript 5.9 → the standard (check on 7.0, emit on 6.0.3) | — |
