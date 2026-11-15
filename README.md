@@ -22,6 +22,7 @@ Every decision, standard and repository is measured against this. Work that does
 | [STANDARDS.md](STANDARDS.md) | The rules every smalt repository follows |
 | [EXCEPTIONS.md](EXCEPTIONS.md) | Where a repository departs from a standard, and why |
 | [DECISIONS.md](DECISIONS.md) | Project-wide decisions, dated, with their reasons |
+| [DECISION-QUEUE.md](DECISION-QUEUE.md) | What waits on the owner, oldest first |
 | [adr/](adr/README.md) | The ADR index for every repository, the shared numbering, and the project-wide (tier 1) ADRs |
 | [WORK.md](WORK.md) | Cross-repository work that is proposed, waiting for decisions, or under way |
 | [releases/](releases/) | Release notes, one folder per release |

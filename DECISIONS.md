@@ -296,3 +296,44 @@ Decided by the owner on 2026-11-15.
   runs, never by monitoring.
 - **ADR tiers:** the tiers drafted on 2026-11-15 are accepted, except where a record conflicts with another record or
   with a later decision; those are listed in [adr/README.md](adr/README.md#conflicts) for the owner.
+
+## Resolving the ADR conflicts
+
+Decided by the owner on 2026-11-15, on the conflicts listed in [adr/README.md](adr/README.md#conflicts).
+
+- **Today's release decisions override the earlier ADRs.** Recorded as [ADR 0037](adr/0037-releases-independent-packages.md),
+  which supersedes the release clauses of smaltdb ADRs 0012, 0013 and 0015, smaltfl ADR 0017's pins to latest `main`,
+  and smaltts ADR 0023's 0.9.0 milestones.
+- **Copyright is aligned everywhere,** smaltfl included: `Copyright (c) 2026 smaltworks contributors`. This supersedes
+  smaltfl ADR 0005's line.
+- **smaltcy moves off its own engine onto smaltdb,** as smaltdb ADR 0033 sets out: Cypher becomes a language over
+  smaltdb plans. smaltcy ADR 0001's own engine and stores are superseded as the direction; they stay until the move is
+  complete (0033, decision 2).
+
+## WebAssembly: plugins only
+
+Decided by the owner on 2026-11-15, on smaltml ADR 0035 (smaltml-simd).
+
+- **No WebAssembly in the core.** The engine, the languages and the kits stay TypeScript.
+- **WebAssembly is accepted in plugins, in clearly defined circumstances.** smaltml-simd is the case that prompted it:
+  WebAssembly SIMD is the only way to get SIMD in JavaScript, and it comes as a plugin.
+- **When JavaScript sets a direction, smalt aligns.** Where the platform's only route to a capability is a particular
+  technology, smalt follows the platform, inside a plugin, rather than going without.
+
+**The circumstances, drafted for the owner to confirm** (in the [decision queue](DECISION-QUEUE.md)). A plugin may use
+WebAssembly only when all of these hold:
+
+1. **No TypeScript route exists** to the capability on the web platform (as with SIMD today), not merely a faster one.
+2. **It's optional:** the feature works without the plugin, in TypeScript, only slower; nothing requires the plugin.
+3. **It's our own code,** built from source in the plugin's repository; no WebAssembly builds of other libraries
+   (smaltml ADR 0024).
+4. **It's narrow:** kernels behind a TypeScript interface, not an application written in another language.
+5. **It's revisited** when the platform offers a TypeScript or JavaScript route, and retired if it can be.
+
+## Running code from other sites: held open
+
+Decided by the owner on 2026-11-15, on smaltbi ADR 0008.
+
+- Future plugins will need a way to be loaded that is **safe and flexible, with safety the primary concern.**
+- The question is **held in tension until there is better direction.** Until it is decided, no app loads code from
+  another site at run time, and smaltbi ADR 0008 stays proposed. It is in the [decision queue](DECISION-QUEUE.md).

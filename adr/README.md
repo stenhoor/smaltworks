@@ -21,7 +21,7 @@ records under [Conflicts](#conflicts), which wait for the owner.
 repository share one sequence, continuing smaltdb's. A new record takes the next number after the highest in any
 repository, open PRs included. Existing numbers are kept as they are; nothing is renumbered.
 
-**The next number is 0037.**
+**The next number is 0038.**
 
 - **Tier 1:** `adr/NNNN-short-title.md` in this repository.
 - **Tier 2:** `docs/adr/NNNN-short-title.md` in its repository, with a number from the same sequence, and a row added
@@ -39,8 +39,20 @@ Known irregularities, kept as they are:
 
 ## Conflicts
 
-Tier 1 records that conflict with another record or with a later decision, found on 2026-11-15. Each waits for the
-owner; until then the later decision applies.
+Tier 1 records that conflicted with another record or with a later decision, found on 2026-11-15, and how the owner
+resolved them the same day (DECISIONS.md, "Resolving the ADR conflicts").
+
+| # | Resolution |
+| --- | --- |
+| 1, 2, 3, 9 | Superseded by [ADR 0037](0037-releases-independent-packages.md) |
+| 4 | Copyright aligned to `smaltworks contributors`, smaltfl included |
+| 5 | smaltcy moves onto smaltdb, per smaltdb ADR 0033 |
+| 6 | WebAssembly accepted in plugins only, in defined circumstances (criteria waiting for confirmation) |
+| 7 | Open: amend smaltgl's records ([decision queue](../DECISION-QUEUE.md)) |
+| 8 | Held open: running code from other sites, safety first ([decision queue](../DECISION-QUEUE.md)) |
+| 10 | smalt-brand's call |
+
+The conflicts as found:
 
 | # | Record | Says | Conflicts with |
 | --- | --- | --- | --- |
@@ -66,7 +78,7 @@ New records follow [TEMPLATE.md](TEMPLATE.md), the format most existing records 
 
 ## Index
 
-74 records: 34 tier 1, 39 tier 2, 1 duplicate. Status as each record states it.
+75 records: 35 tier 1, 39 tier 2, 1 duplicate. Status as each record states it.
 
 ### The shared sequence
 
@@ -109,6 +121,7 @@ New records follow [TEMPLATE.md](TEMPLATE.md), the format most existing records 
 | 0034 | smaltml | where `device: 'auto'` runs | accepted | 2 | [source](https://github.com/stenhoor/smaltml/blob/main/docs/adr/0034-where-auto-runs.md) |
 | 0035 | smaltml | WebAssembly SIMD kernels, in a plugin: smaltml-simd | proposed | 1 | [source](https://github.com/stenhoor/smaltml/blob/main/docs/adr/0035-simd-kernels-in-a-plugin.md) [copy](imported/smaltml/0035-simd-kernels-in-a-plugin.md) |
 | 0036 | smaltdb | User-defined functions from plugins, with predict as the first | accepted | 1 | [source](https://github.com/stenhoor/smaltdb/blob/main/docs/adr/0036-user-defined-functions.md) [copy](imported/smaltdb/0036-user-defined-functions.md) |
+| 0037 | smaltworks | Releases: independent packages, declared compatibility | accepted | 1 | [record](0037-releases-independent-packages.md) |
 
 ### Repository-local sequences (before or outside the shared rule)
 

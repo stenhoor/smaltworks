@@ -31,6 +31,7 @@ What follows from it, as already decided (the records are linked):
 | The next ADR number | [adr/README.md](adr/README.md#numbering) |
 | How sessions work: PRs, issues, outside code | [context/session-rules.md](context/session-rules.md) |
 | Cross-repository work in flight | [WORK.md](WORK.md) |
+| What waits on the owner | [DECISION-QUEUE.md](DECISION-QUEUE.md) |
 | Brand: names, voice, marks, colours, the site kit | [smalt-brand](https://github.com/stenhoor/smalt-brand) ([what goes where](docs/brand-and-works.md)) |
 
 ## The family

@@ -123,3 +123,8 @@ Every smalt repository's default branch is `main`, and work branches merge into 
 - **Dependencies come from the family:** `stenhoor` repositories or published `@smaltworks` packages only, unless
   [EXCEPTIONS.md](EXCEPTIONS.md) lists the case.
 - (DECISIONS.md, "Standards from the review interviews", 2026-11-15.)
+
+## WebAssembly
+
+No WebAssembly in the core. A plugin may use it only in the circumstances set out in DECISIONS.md, "WebAssembly:
+plugins only" (drafted 2026-11-15, waiting for the owner's confirmation).
