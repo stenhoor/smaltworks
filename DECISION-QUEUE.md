@@ -13,8 +13,5 @@ decided; the decision goes to [DECISIONS.md](DECISIONS.md) or an ADR.
 
 | Since | Item | Record |
 | --- | --- | --- |
-| 2026-11-08 | smaltfl ADRs 0010–0013 and 0015 (proposed) | smaltfl's own; its maintainers decide its design |
 | 2026-11-09 | ADR 0025 and 0026: smaltai (proposed) | [0025](adr/imported/smalt-brand/0025-smaltai-agent-gateways-and-actions.md), [0026](adr/imported/smalt-brand/0026-smaltai-in-browser-llm.md) |
-| 2026-11-15 | **The circumstances in which a plugin may use WebAssembly**: the criteria drafted in DECISIONS.md, "WebAssembly: plugins only" | [DECISIONS.md](DECISIONS.md#webassembly-plugins-only) |
-| 2026-11-15 | ADR 0035, smaltml-simd: its status, once the WebAssembly criteria are confirmed | [0035](adr/imported/smaltml/0035-simd-kernels-in-a-plugin.md) |
-| 2026-11-15 | smaltgl ADRs 0001 and 0003 still say "a product of its own" and `stenhoor/smalt-geo`; amend to the kits layer and `stenhoor/smaltgl` | [adr/README.md, Conflicts](adr/README.md#conflicts) |
+| 2026-11-15 | ADR 0035, smaltml-simd: accept? It meets the confirmed WebAssembly criteria (no TypeScript route to SIMD; an optional plugin over smaltml's TypeScript; our own kernels) | [0035](adr/imported/smaltml/0035-simd-kernels-in-a-plugin.md) |

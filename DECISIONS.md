@@ -320,8 +320,8 @@ Decided by the owner on 2026-11-15, on smaltml ADR 0035 (smaltml-simd).
 - **When JavaScript sets a direction, smalt aligns.** Where the platform's only route to a capability is a particular
   technology, smalt follows the platform, inside a plugin, rather than going without.
 
-**The circumstances, drafted for the owner to confirm** (in the [decision queue](DECISION-QUEUE.md)). A plugin may use
-WebAssembly only when all of these hold:
+**The circumstances** (drafted 2026-11-15, confirmed by the owner the same day). A plugin may use WebAssembly only
+when all of these hold:
 
 1. **No TypeScript route exists** to the capability on the web platform (as with SIMD today), not merely a faster one.
 2. **It's optional:** the feature works without the plugin, in TypeScript, only slower; nothing requires the plugin.
@@ -337,3 +337,13 @@ Decided by the owner on 2026-11-15, on smaltbi ADR 0008.
 - Future plugins will need a way to be loaded that is **safe and flexible, with safety the primary concern.**
 - The question is **held in tension until there is better direction.** Until it is decided, no app loads code from
   another site at run time, and smaltbi ADR 0008 stays proposed. It is in the [decision queue](DECISION-QUEUE.md).
+
+## Decision queue, first pass
+
+Decided by the owner on 2026-11-15.
+
+- **The WebAssembly circumstances are confirmed** as written in "WebAssembly: plugins only".
+- **smaltgl's ADRs 0001 and 0003 are amended:** smaltgl sits in the kits layer, and its repository is
+  `stenhoor/smaltgl` (renamed from `stenhoor/smalt-geo`, which still redirects).
+- **The smaltai ADRs (0025, 0026) stay in the queue.**
+- **smaltfl's proposed ADRs stay with smaltfl's maintainers;** they leave the owner's queue.

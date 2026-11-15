@@ -127,4 +127,4 @@ Every smalt repository's default branch is `main`, and work branches merge into 
 ## WebAssembly
 
 No WebAssembly in the core. A plugin may use it only in the circumstances set out in DECISIONS.md, "WebAssembly:
-plugins only" (drafted 2026-11-15, waiting for the owner's confirmation).
+plugins only" (confirmed by the owner, 2026-11-15).

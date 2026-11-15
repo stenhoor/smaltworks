@@ -47,8 +47,8 @@ resolved them the same day (DECISIONS.md, "Resolving the ADR conflicts").
 | 1, 2, 3, 9 | Superseded by [ADR 0037](0037-releases-independent-packages.md) |
 | 4 | Copyright aligned to `smaltworks contributors`, smaltfl included |
 | 5 | smaltcy moves onto smaltdb, per smaltdb ADR 0033 |
-| 6 | WebAssembly accepted in plugins only, in defined circumstances (criteria waiting for confirmation) |
-| 7 | Open: amend smaltgl's records ([decision queue](../DECISION-QUEUE.md)) |
+| 6 | WebAssembly accepted in plugins only, in the circumstances the owner confirmed |
+| 7 | smaltgl's records amended: kits layer, repository `stenhoor/smaltgl` |
 | 8 | Held open: running code from other sites, safety first ([decision queue](../DECISION-QUEUE.md)) |
 | 10 | smalt-brand's call |
 
