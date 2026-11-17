@@ -14,4 +14,3 @@ decided; the decision goes to [DECISIONS.md](DECISIONS.md) or an ADR.
 | Since | Item | Record |
 | --- | --- | --- |
 | 2026-11-09 | ADR 0025 and 0026: smaltai (proposed) | [0025](adr/imported/smalt-brand/0025-smaltai-agent-gateways-and-actions.md), [0026](adr/imported/smalt-brand/0026-smaltai-in-browser-llm.md) |
-| 2026-11-15 | ADR 0035, smaltml-simd: accept? It meets the confirmed WebAssembly criteria (no TypeScript route to SIMD; an optional plugin over smaltml's TypeScript; our own kernels) | [0035](adr/imported/smaltml/0035-simd-kernels-in-a-plugin.md) |

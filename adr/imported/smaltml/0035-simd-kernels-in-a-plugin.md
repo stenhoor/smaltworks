@@ -1,9 +1,10 @@
 # ADR 0035: WebAssembly SIMD kernels, in a plugin: smaltml-simd
 
-> **Copied** from [smaltml/docs/adr/0035-simd-kernels-in-a-plugin.md](https://github.com/stenhoor/smaltml/blob/594b98d26c7bfe5e05dc286561267586deeb5227/docs/adr/0035-simd-kernels-in-a-plugin.md) (commit `594b98d`) on 2026-11-15. The source stays in place until its removal PR. Relative links were rewritten to resolve from smaltworks.
+> **Copied** from [smaltml/docs/adr/0035-simd-kernels-in-a-plugin.md](https://github.com/stenhoor/smaltml/blob/bdbe80193ae36c891b19227ade8d069cac76e57c/docs/adr/0035-simd-kernels-in-a-plugin.md) (commit `bdbe801`) on 2026-11-17, replacing the copy of 2026-11-15 (commit `594b98d`) on the record's acceptance. The source stays in place until its removal PR. Relative links were rewritten to resolve from smaltworks.
 
-- **Status:** proposed, 2026-11-15. The owner's direction and decisions of that day are recorded under Decision (items
-  2 and 10); the points under "Still to decide" are open.
+- **Status:** accepted, 2026-11-17 (the owner). The owner's direction and decisions of 2026-11-15 are recorded under
+  Decision (items 2 and 10); those of 2026-11-17 in items 3, 5 and 8 and under "Still to decide", item 1. Items 3 and
+  8 were amended on acceptance, as each says.
 - **Date:** 2026-11-15
 - **Amends:** [ADR 0024](0024-smaltml-scope-and-architecture.md): section 8 ("Where it is hardest") and "Still to
   decide", item 5 (whether smaltml may write its own WebAssembly kernels).
@@ -96,8 +97,12 @@ The probe isn't in the repository. Its code and benchmark move to smaltml-simd a
 3. **smaltml gets one extension point, in TypeScript: replaceable kernels.** The plugin can only swap the CPU kernels
    smaltml already has, with the same signatures:
 
-   - `useKernels({ gramPart, ... })` in `@smaltworks/smaltml/core` sets them; `useKernels(null)` puts smaltml's own
-     back. The solvers and models don't change.
+   - `useKernels({ name, version, kernels: { gramPart, ... }, threads })` in `@smaltworks/smaltml/core` sets them;
+     `useKernels(null)` puts smaltml's own back. The solvers and models don't change.
+   - **The kernel contract has a version** (`KERNELS_VERSION`, 1), so the plugin can grow with smaltml's later phases
+     (the owner, 2026-11-17: the plugin serves smaltml's current and future needs, without painting itself into a
+     box). Adding a kernel to the contract keeps the version; changing what one takes or gives raises it, and a set
+     written for another version isn't used. Amended on acceptance: the first draft had kernels only, unversioned.
    - A kernel the plugin doesn't give stays smaltml's. A plugin kernel that fails a check at start (a small product
      against the TypeScript kernel) isn't used.
    - The plugin is used only where the app turns it on: `await useSimd()` from `@smaltworks/smaltml-simd`. Nothing in
@@ -115,7 +120,11 @@ The probe isn't in the repository. Its code and benchmark move to smaltml-simd a
 5. **The plugin writes its WebAssembly from TypeScript, in its own code.** Its kernels are TypeScript functions that
    emit the WebAssembly bytes at run time, as the probe does: no compiler toolchain, no `.wasm` file built elsewhere,
    no outside package, nothing loaded from another site. The code that writes each instruction is in the repository,
-   to read and review.
+   to read and review. Considered on 2026-11-17: Rust compiled to WebAssembly, for its optimizing compiler and SIMD
+   intrinsics. The owner kept TypeScript: the kernels are small, their speed comes from the blocking chosen by hand,
+   and a second language and toolchain would cost more than they give. smaltml's side doesn't depend on the plugin's
+   language, so the choice can be revisited inside smaltml-simd, by an amendment here, if the kernels outgrow an
+   emitter.
 
 6. **Plain SIMD by default; fused multiply-add only when asked** (`useSimd({ fusedMultiplyAdd: true })`, where the
    browser has relaxed SIMD). Plain SIMD gives the same result on every machine; fused multiply-add can differ in the
@@ -130,8 +139,13 @@ The probe isn't in the repository. Its code and benchmark move to smaltml-simd a
      fused multiply-add keeps it on one machine.
 
 8. **Threads use the plugin too.** The thread pool's workers run the same kernels, or a threaded fit would differ
-   from `fitSync`. The plugin ships its own workers' script (smaltml's with its kernels) and `useSimd()` points the
-   pool at it (`configureThreads({ script })`). Each worker compiles the kernels once.
+   from `fitSync`. The kernel set names a module (`threads: { module, options }`); smaltml's own workers import it
+   when the pool starts and use the set its default export gives, as the main thread does. Each worker compiles the
+   kernels once. A worker that can't load the set, or ends up with other kernels, keeps fits on one thread; so does a
+   set without `threads`. Amended on acceptance (2026-11-17): the first draft had the plugin ship its own workers'
+   script, smaltml's with its kernels, set by `configureThreads({ script })`. That copy of smaltml's worker would
+   drift from smaltml's protocol with every smaltml release; a module the workers import keeps the plugin free of
+   smaltml's internals.
 
 9. **Where WebAssembly SIMD isn't available,** `useSimd()` reports it (it resolves to `false`) and smaltml's own
    kernels stay in use. Node has it; browsers have had it since Chrome 91, Firefox 89 and Safari 16.4.
@@ -158,7 +172,7 @@ The probe isn't in the repository. Its code and benchmark move to smaltml-simd a
 ## Steps
 
 1. This record, then the owner's decisions on "Still to decide".
-2. smaltml: `useKernels` in the core, with tests that a replaced kernel is used by every model, on one thread and on
+2. Done (2026-11-17): smaltml: `useKernels` in the core, with tests that a replaced kernel is used by every model, on one thread and on
    several, and that `useKernels(null)` restores smaltml's own. TypeScript only.
 3. The repository `stenhoor/smaltml-simd` (the owner creates it), in the family's layout: its brand from
    smalt-brand, CI, docs.
@@ -168,10 +182,9 @@ The probe isn't in the repository. Its code and benchmark move to smaltml-simd a
 
 ## Still to decide
 
-1. **Fused multiply-add:** offered as an option (item 6), or plain SIMD only, for one result on every machine. Measured
-   ("How far results move"): fused and plain differ by about one rounding step in XᵀX and under 10⁻¹⁵ in
-   well-conditioned coefficients, less than the plugin itself moves them, for 6–30% more speed on the probe. The recommendation is
-   to offer it, off by default.
+1. ~~**Fused multiply-add**~~: decided 2026-11-17 (the owner): offered as an option, off by default (item 6).
+   Measured ("How far results move"): fused and plain differ by about one rounding step in XᵀX and under 10⁻¹⁵ in
+   well-conditioned coefficients, less than the plugin itself moves them, for 6–30% more speed on the probe.
 2. ~~**The brand**~~: decided 2026-11-15, shown as smaltdb's plugins are (item 10).
 3. **Threads and SIMD together:** the probe ran on one thread. Whether the gains multiply on 4 threads, or memory
    bandwidth caps them, is to be measured in step 4.
