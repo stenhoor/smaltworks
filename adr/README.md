@@ -119,7 +119,7 @@ New records follow [TEMPLATE.md](TEMPLATE.md), the format most existing records 
 | 0032 | smalt-brand | git through the local repository: no credentials, no remotes | accepted | 1 | [source](https://github.com/stenhoor/smalt-brand/blob/main/docs/adr/0032-git-through-the-local-repository.md) [copy](imported/smalt-brand/0032-git-through-the-local-repository.md) |
 | 0033 | smaltdb | Property graphs and version history in smaltdb | proposed | 1 | [source](https://github.com/stenhoor/smaltdb/blob/main/docs/adr/0033-property-graphs-and-history.md) [copy](imported/smaltdb/0033-property-graphs-and-history.md) |
 | 0034 | smaltml | where `device: 'auto'` runs | accepted | 2 | [source](https://github.com/stenhoor/smaltml/blob/main/docs/adr/0034-where-auto-runs.md) |
-| 0035 | smaltml | WebAssembly SIMD kernels, in a plugin: smaltml-simd | proposed | 1 | [source](https://github.com/stenhoor/smaltml/blob/main/docs/adr/0035-simd-kernels-in-a-plugin.md) [copy](imported/smaltml/0035-simd-kernels-in-a-plugin.md) |
+| 0035 | smaltml | WebAssembly SIMD kernels, in a plugin: smaltml-simd | accepted | 1 | [source](https://github.com/stenhoor/smaltml/blob/main/docs/adr/0035-simd-kernels-in-a-plugin.md) [copy](imported/smaltml/0035-simd-kernels-in-a-plugin.md) |
 | 0036 | smaltdb | User-defined functions from plugins, with predict as the first | accepted | 1 | [source](https://github.com/stenhoor/smaltdb/blob/main/docs/adr/0036-user-defined-functions.md) [copy](imported/smaltdb/0036-user-defined-functions.md) |
 | 0037 | smaltworks | Releases: independent packages, declared compatibility | accepted | 1 | [record](0037-releases-independent-packages.md) |
 

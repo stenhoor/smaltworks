@@ -333,6 +333,18 @@ when all of these hold:
 4. **It's narrow:** kernels behind a TypeScript interface, not an application written in another language.
 5. **It's revisited** when the platform offers a TypeScript or JavaScript route, and retired if it can be.
 
+### smaltml ADR 0035 accepted
+
+Decided by the owner on 2026-11-17.
+
+- **ADR 0035 is accepted:** smaltml-simd, WebAssembly SIMD kernels in a plugin, under the circumstances above.
+- **Fused multiply-add is an option, off by default.** Plain SIMD gives one result on every machine.
+- **The plugin serves smaltml's current and future needs** without painting itself into a box: smaltml's kernel
+  contract (`useKernels`) has a version, so kernels for later phases can be added.
+- **The plugin stays TypeScript that writes WebAssembly.** Rust compiled to WebAssembly was considered and not
+  chosen: a second language and toolchain for small, hand-blocked kernels. smaltml's side doesn't depend on the
+  plugin's language, so the choice can be revisited inside smaltml-simd.
+
 ## Running code from other sites: held open
 
 Decided by the owner on 2026-11-15, on smaltbi ADR 0008.
