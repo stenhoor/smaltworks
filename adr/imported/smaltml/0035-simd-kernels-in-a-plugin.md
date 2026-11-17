@@ -1,9 +1,9 @@
 # ADR 0035: WebAssembly SIMD kernels, in a plugin: smaltml-simd
 
-> **Copied** from [smaltml/docs/adr/0035-simd-kernels-in-a-plugin.md](https://github.com/stenhoor/smaltml/blob/bdbe80193ae36c891b19227ade8d069cac76e57c/docs/adr/0035-simd-kernels-in-a-plugin.md) (commit `bdbe801`) on 2026-11-17, replacing the copy of 2026-11-15 (commit `594b98d`) on the record's acceptance. The source stays in place until its removal PR. Relative links were rewritten to resolve from smaltworks.
+> **Copied** from [smaltml/docs/adr/0035-simd-kernels-in-a-plugin.md](https://github.com/stenhoor/smaltml/blob/1852dd470ec50700a4d86c2094a710ed54f5a654/docs/adr/0035-simd-kernels-in-a-plugin.md) (commit `1852dd4`) on 2026-11-17, replacing the copy of that morning (commit `bdbe801`) after stenhoor/smaltml#45 amended it. The source stays in place until its removal PR. Relative links were rewritten to resolve from smaltworks.
 
 - **Status:** accepted, 2026-11-17 (the owner). The owner's direction and decisions of 2026-11-15 are recorded under
-  Decision (items 2 and 10); those of 2026-11-17 in items 3, 5 and 8 and under "Still to decide", item 1. Items 3 and
+  Decision (items 2 and 10); those of 2026-11-17 in items 3, 5 and 8 and under "Still to decide", items 1 and 4. Items 3 and
   8 were amended on acceptance, as each says.
 - **Date:** 2026-11-15
 - **Amends:** [ADR 0024](0024-smaltml-scope-and-architecture.md): section 8 ("Where it is hardest") and "Still to
@@ -115,7 +115,8 @@ The probe isn't in the repository. Its code and benchmark move to smaltml-simd a
 
    Not the memory-bound ones: Xw, Xᵀv and the scalers read each value once and spend their time waiting for memory,
    which SIMD doesn't change. Not the logistic objective until measured: it spends much of its time in `exp`, which
-   WebAssembly doesn't have as a SIMD instruction.
+   WebAssembly doesn't have as a SIMD instruction. Measured on 2026-11-17, and added: its row steps, with the
+   plugin's own exp (amended on acceptance, "Still to decide", item 4).
 
 5. **The plugin writes its WebAssembly from TypeScript, in its own code.** Its kernels are TypeScript functions that
    emit the WebAssembly bytes at run time, as the probe does: no compiler toolchain, no `.wasm` file built elsewhere,
@@ -188,5 +189,24 @@ The probe isn't in the repository. Its code and benchmark move to smaltml-simd a
 2. ~~**The brand**~~: decided 2026-11-15, shown as smaltdb's plugins are (item 10).
 3. **Threads and SIMD together:** the probe ran on one thread. Whether the gains multiply on 4 threads, or memory
    bandwidth caps them, is to be measured in step 4.
-4. **The logistic objective:** whether a SIMD `exp` (a polynomial approximation, results within its own tolerance)
-   is worth trying, after step 4.
+4. ~~**The logistic objective**~~: decided 2026-11-17 (the owner): build it, after measuring.
+   - **Measured** (`node bench/exp-share.mjs`: smaltml's objectives as they are, and with `Math.exp`, `Math.log1p` and
+     `Math.log` replaced by cheap arithmetic; the same 4-core VM, several runs):
+
+     | Data | Objective | ms per evaluation | Share of exp, log1p, log | A fit's speed-up if they cost nothing |
+     | --- | --- | ---: | ---: | ---: |
+     | 10k × 20 | binary | 0.65–1.1 | 47–49% | about 1.9× |
+     | 10k × 20 | 3 classes | 1.6–2.6 | 22–36% | about 1.3–1.5× |
+     | 200k × 50 | binary | 28–34 | 18–23% | about 1.27× |
+     | 200k × 50 | 3 classes | 72–73 | 12–15% | about 1.15× |
+
+     An `lbfgs` fit is almost all objective evaluations (100 iterations of 29 ms in a 3.4 s fit, 200k × 50, 2
+     classes). The share falls as columns grow: a row costs one to three of these functions, and multiply-adds that
+     grow with the columns. One run gave −17% for 200k × 50, 3 classes, against 12–15% in every other: the VM's noise.
+   - **The owner's decision:** build it anyway, for the gain on narrow data.
+   - **How:** two more kernels in the contract (still version 1: adding kernels doesn't change it),
+     `binaryLogisticRows` and `multinomialLogisticRows`: each objective's step between Xw and Xᵀr, which computes the
+     loss and replaces the scores by their residuals. smaltml's own are its loops as they were, so its own results
+     don't change, bit for bit; the running loss goes in, so the sum keeps its order. smaltml-simd brings its own
+     f64x2 exp, log1p and log (a polynomial and a series each, within a few rounding steps of `Math`'s), so logistic
+     fits with the plugin are close to smaltml's own, not equal, as the others are.
