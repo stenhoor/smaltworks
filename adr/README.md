@@ -21,7 +21,7 @@ records under [Conflicts](#conflicts), which wait for the owner.
 repository share one sequence, continuing smaltdb's. A new record takes the next number after the highest in any
 repository, open PRs included. Existing numbers are kept as they are; nothing is renumbered.
 
-**The next number is 0038.**
+**The next number is 0040.**
 
 - **Tier 1:** `adr/NNNN-short-title.md` in this repository.
 - **Tier 2:** `docs/adr/NNNN-short-title.md` in its repository, with a number from the same sequence, and a row added
@@ -34,6 +34,11 @@ Known irregularities, kept as they are:
   with the repository's name: `smaltbi 0003`. smaltfl is a shared project whose maintainers decide its design in its own
   ADRs ([EXCEPTIONS.md](../EXCEPTIONS.md)); smaltbi started before the shared rule; smaltcy and smaltgl started after
   it, and take shared numbers from now on.
+- **ADR 0037** is used twice: smaltworks' [releases record](0037-releases-independent-packages.md) and smaltml's
+  [several regression targets](https://github.com/stenhoor/smaltml/blob/main/docs/adr/0037-several-targets.md)
+  (dated 2026-11-15 and 2026-11-17). Found on 2026-11-17; how to resolve it is the owner's call.
+- **ADR 0038** is smaltdb's [map type](https://github.com/stenhoor/smaltdb/blob/main/docs/adr/0038-map-type.md),
+  not yet in the index below (found on 2026-11-17; its tier is still to assign).
 - **ADR 0024** is in smaltml and in smalt-brand. smaltml's copy is the newer one (amended by ADR 0034 and 0036); the
   copy here is smaltml's. smalt-brand's is out of date.
 
@@ -78,7 +83,7 @@ New records follow [TEMPLATE.md](TEMPLATE.md), the format most existing records 
 
 ## Index
 
-75 records: 35 tier 1, 39 tier 2, 1 duplicate. Status as each record states it.
+76 records: 36 tier 1, 39 tier 2, 1 duplicate. Status as each record states it.
 
 ### The shared sequence
 
@@ -122,6 +127,7 @@ New records follow [TEMPLATE.md](TEMPLATE.md), the format most existing records 
 | 0035 | smaltml | WebAssembly SIMD kernels, in a plugin: smaltml-simd | accepted | 1 | [source](https://github.com/stenhoor/smaltml/blob/main/docs/adr/0035-simd-kernels-in-a-plugin.md) [copy](imported/smaltml/0035-simd-kernels-in-a-plugin.md) |
 | 0036 | smaltdb | User-defined functions from plugins, with predict as the first | accepted | 1 | [source](https://github.com/stenhoor/smaltdb/blob/main/docs/adr/0036-user-defined-functions.md) [copy](imported/smaltdb/0036-user-defined-functions.md) |
 | 0037 | smaltworks | Releases: independent packages, declared compatibility | accepted | 1 | [record](0037-releases-independent-packages.md) |
+| 0039 | smaltworks | smaltlp's scope and architecture | proposed | 1 | [record](0039-smaltlp-scope-and-architecture.md) |
 
 ### Repository-local sequences (before or outside the shared rule)
 
