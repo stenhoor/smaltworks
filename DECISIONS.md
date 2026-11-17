@@ -344,6 +344,10 @@ Decided by the owner on 2026-11-17.
 - **The plugin stays TypeScript that writes WebAssembly.** Rust compiled to WebAssembly was considered and not
   chosen: a second language and toolchain for small, hand-blocked kernels. smaltml's side doesn't depend on the
   plugin's language, so the choice can be revisited inside smaltml-simd.
+- **A SIMD exp for the logistic objective: built, and opt-in** (the owner, 2026-11-17; ADR 0035, "Still to decide",
+  item 4). Measured first: exp, log1p and log are 12% to 49% of the objective, less on wider data. Built anyway, on
+  the plugin's own f64x2 exp, log1p and ln; it gained 1.0 to 1.3 times on one thread, so it is off by default
+  (`useSimd({ logistic: true })`).
 
 ## Running code from other sites: held open
 
