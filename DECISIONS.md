@@ -349,6 +349,31 @@ Decided by the owner on 2026-11-17.
   the plugin's own f64x2 exp, log1p and ln; it gained 1.0 to 1.3 times on one thread, so it is off by default
   (`useSimd({ logistic: true })`).
 
+## WebGPU and SIMD in smaltkit
+
+The owner, 2026-11-18: "WebGPU and SIMD have been migrated to smaltkit; smaltlp will retain responsibility for writing
+kernels to execute by the kit's compute efforts."
+
+What the repositories show on 2026-11-18:
+
+- `smaltkit/simd` is on smaltkit's `main`: WebAssembly SIMD written from TypeScript at run time (`Code`,
+  `ModuleBuilder`, `Room`, `simdSupport`, f64x2 exp, log1p and log), with no toolchain and no `.wasm` file.
+- `smaltkit/gpu`, WebGPU compute (the device, pipelines from WGSL, the matrix product), is smaltkit#52, open.
+
+What follows:
+
+- **smaltkit's compute runs kernels; products write them.** smaltkit holds the means of running WebGPU and WebAssembly
+  SIMD; each product writes the kernels for its own steps and runs them on it.
+- **smaltlp:** its kernels live in smaltlp, behind an optional entry point the core solver never imports, and smaltkit
+  is an optional peer dependency (the owner, 2026-11-18). smaltlp ADR 0039 is amended (sections 7 and 8).
+- **"WebAssembly: plugins only" changes** for smaltkit's compute: smaltkit, a kit, now writes WebAssembly at run time,
+  where the decision above said the kits stay TypeScript. The engine and the languages are unchanged. For the products
+  that use it, the circumstances still describe the kernels: optional, our own code, narrow, and TypeScript works
+  without them.
+
+Not yet recorded, for the owner: what becomes of smaltml-simd and of smaltml's `useKernels` contract now that the
+writer is in smaltkit, and whether smaltml's kernels move into smaltml the way smaltlp's live in smaltlp.
+
 ## Running code from other sites: held open
 
 Decided by the owner on 2026-11-15, on smaltbi ADR 0008.

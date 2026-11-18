@@ -126,5 +126,9 @@ Every smalt repository's default branch is `main`, and work branches merge into 
 
 ## WebAssembly
 
-No WebAssembly in the core. A plugin may use it only in the circumstances set out in DECISIONS.md, "WebAssembly:
-plugins only" (confirmed by the owner, 2026-11-15).
+No WebAssembly in the engine or the languages. A plugin may use it only in the circumstances set out in DECISIONS.md,
+"WebAssembly: plugins only" (confirmed by the owner, 2026-11-15).
+
+WebGPU and WebAssembly SIMD run on smaltkit's compute (`smaltkit/simd`, `smaltkit/gpu`); each product writes the kernels
+for its own steps, behind an optional entry point, with a TypeScript path that works without them (DECISIONS.md,
+"WebGPU and SIMD in smaltkit", the owner, 2026-11-18).
