@@ -1,7 +1,8 @@
 # ADR 0039: smaltlp's scope and architecture
 
 - **Status:** proposed. The owner's answers of 2026-11-17 (an interview after the research below) are recorded under
-  Decision; the items under "Still to decide" are open.
+  Decision; the items under "Still to decide" are open. Amended 2026-11-18 (the owner): sections 7 and 8, WebGPU and
+  SIMD run on smaltkit's compute, and smaltlp writes the kernels (DECISIONS.md, "WebGPU and SIMD in smaltkit").
 - **Date:** 2026-11-17
 - **Tier:** 1 (project-wide): it creates a product and a repository.
 - **Repositories:** smaltlp (new); smalt-brand (its brand); smaltdb (a plugin function later, through ADR 0036);
@@ -53,7 +54,8 @@ were not confirmed in the session; netlib.org, miplib.zib.de, docs.scipy.org and
   - smaltml is the pattern: a TypeScript library in the Kits layer, the CPU path in 64-bit floats as the product,
     WebGPU as a measured accelerator, and compare tests against Python saved as fixtures.
   - WebAssembly is allowed only in plugins, in the circumstances the owner confirmed. smaltml-simd is the one such
-    plugin. Its kernels belong to smaltml's own kernel contract (`useKernels`, `KERNELS_VERSION` 1).
+    plugin. Its kernels belong to smaltml's own kernel contract (`useKernels`, `KERNELS_VERSION` 1). (As of
+    2026-11-18, WebGPU and SIMD are in smaltkit: section 8.)
   - smaltdb ADR 0036 lets plugins register functions that every query language can call.
 
 ## Decision
@@ -143,16 +145,29 @@ As smaltml ADR 0024 section 7 has it:
 - **A research spike comes first.**
 - **Measured, like smaltml ADR 0034:** `device: 'auto'` uses the GPU only where it is measured at least 2× faster at
   the stated tolerance. A GPU result that fails the 64-bit check is never returned as optimal.
+- **On smaltkit's compute** (amended 2026-11-18, section 8): the GPU kernels, in WGSL, are smaltlp's; smaltkit's
+  WebGPU module (`smaltkit/gpu`, smaltkit#52, open on 2026-11-18) gives the device and runs them.
 
-### 8. Replaceable kernels: smaltlp's own contract, the plugin decided later
+### 8. Kernels: smaltlp writes them, smaltkit's compute runs them
 
-- **smaltlp gets its own versioned kernel contract,** modelled on smaltml's `useKernels` and `KERNELS_VERSION`.
-- **The plugin is decided later.** Which plugin serves it is settled once benchmarks show a kernel worth it: smaltml-simd
-  grown to serve both kits, a sibling plugin, or none.
+Amended 2026-11-18 (the owner): "WebGPU and SIMD have been migrated to smaltkit; smaltlp will retain responsibility
+for writing kernels to execute by the kit's compute efforts." This replaces the first version's own kernel contract
+with a plugin decided later (smaltml-simd grown, a sibling plugin, or none).
+
+- **smaltkit's compute runs the kernels.** `smaltkit/simd` (on smaltkit's `main`: `Code`, `ModuleBuilder`, `Room`,
+  `simdSupport`, f64x2 math) writes and runs WebAssembly SIMD from TypeScript; `smaltkit/gpu` will do the same for
+  WebGPU.
+- **smaltlp writes its own kernels,** for its own steps, with those modules: the SIMD instructions and the WGSL. They
+  live in smaltlp, behind an optional entry point (such as `@smaltworks/smaltlp/kernels`) that the core solver never
+  imports (the owner, 2026-11-18).
+- **The core stays TypeScript and works alone.** Without the kernels' entry, or where the engine has no SIMD or no
+  WebGPU, every solve runs in plain TypeScript, as now. The kernels give results within rounding of the TypeScript
+  path, checked by tests, as smaltml's are.
+- **smaltkit is an optional peer dependency** (the owner, 2026-11-18): the kernels' entry imports it; the core doesn't,
+  so an app without smaltkit still solves. smaltlp keeps no runtime dependencies.
 - **Where SIMD helps** *(assumption: to be measured)*. Sparse simplex work is mostly memory-bound and gains little.
-  Dense steps gain more, such as an interior point's A·D·Aᵀ, which is the weighted Gram matrix smaltml-simd already
-  has.
-- **WebAssembly rules:** "WebAssembly: plugins only" applies in full. The core contains no WebAssembly.
+  Dense steps gain more, such as an interior point's A·D·Aᵀ, a weighted Gram matrix. No kernel ships without a
+  benchmark that shows it gains.
 
 ### 9. Package, repository and brand
 
