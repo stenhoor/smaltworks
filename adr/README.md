@@ -21,7 +21,7 @@ records under [Conflicts](#conflicts), which wait for the owner.
 repository share one sequence, continuing smaltdb's. A new record takes the next number after the highest in any
 repository, open PRs included. Existing numbers are kept as they are; nothing is renumbered.
 
-**The next number is 0040.**
+**The next number is 0041.**
 
 - **Tier 1:** `adr/NNNN-short-title.md` in this repository.
 - **Tier 2:** `docs/adr/NNNN-short-title.md` in its repository, with a number from the same sequence, and a row added
@@ -37,6 +37,10 @@ Known irregularities, kept as they are:
 - **ADR 0037** is used twice: smaltworks' [releases record](0037-releases-independent-packages.md) and smaltml's
   [several regression targets](https://github.com/stenhoor/smaltml/blob/main/docs/adr/0037-several-targets.md)
   (dated 2026-11-15 and 2026-11-17). Found on 2026-11-17; how to resolve it is the owner's call.
+- **ADR 0039** is used twice: smaltworks' [smaltlp's scope and architecture](0039-smaltlp-scope-and-architecture.md)
+  and smaltml's [trees and forests](https://github.com/stenhoor/smaltml/blob/main/docs/adr/0039-trees-and-forests.md)
+  (both dated 2026-11-17). Found on 2026-11-18: the smaltml session numbered it from the repositories it could read,
+  which didn't include smaltworks. Kept as they are, by the rule above.
 - **ADR 0038** is smaltdb's [map type](https://github.com/stenhoor/smaltdb/blob/main/docs/adr/0038-map-type.md),
   not yet in the index below (found on 2026-11-17; its tier is still to assign).
 - **ADR 0024** is in smaltml and in smalt-brand. smaltml's copy is the newer one (amended by ADR 0034 and 0036); the
@@ -83,7 +87,7 @@ New records follow [TEMPLATE.md](TEMPLATE.md), the format most existing records 
 
 ## Index
 
-76 records: 36 tier 1, 39 tier 2, 1 duplicate. Status as each record states it.
+78 records: 37 tier 1, 40 tier 2, 1 duplicate. Status as each record states it.
 
 ### The shared sequence
 
@@ -124,10 +128,12 @@ New records follow [TEMPLATE.md](TEMPLATE.md), the format most existing records 
 | 0032 | smalt-brand | git through the local repository: no credentials, no remotes | accepted | 1 | [source](https://github.com/stenhoor/smalt-brand/blob/main/docs/adr/0032-git-through-the-local-repository.md) [copy](imported/smalt-brand/0032-git-through-the-local-repository.md) |
 | 0033 | smaltdb | Property graphs and version history in smaltdb | proposed | 1 | [source](https://github.com/stenhoor/smaltdb/blob/main/docs/adr/0033-property-graphs-and-history.md) [copy](imported/smaltdb/0033-property-graphs-and-history.md) |
 | 0034 | smaltml | where `device: 'auto'` runs | accepted | 2 | [source](https://github.com/stenhoor/smaltml/blob/main/docs/adr/0034-where-auto-runs.md) |
-| 0035 | smaltml | WebAssembly SIMD kernels, in a plugin: smaltml-simd | accepted | 1 | [source](https://github.com/stenhoor/smaltml/blob/main/docs/adr/0035-simd-kernels-in-a-plugin.md) [copy](imported/smaltml/0035-simd-kernels-in-a-plugin.md) |
+| 0035 | smaltml | WebAssembly SIMD kernels, in a plugin: smaltml-simd | accepted; superseded in part by 0040 (2026-11-18) | 1 | [source](https://github.com/stenhoor/smaltml/blob/main/docs/adr/0035-simd-kernels-in-a-plugin.md) [copy](imported/smaltml/0035-simd-kernels-in-a-plugin.md) |
 | 0036 | smaltdb | User-defined functions from plugins, with predict as the first | accepted | 1 | [source](https://github.com/stenhoor/smaltdb/blob/main/docs/adr/0036-user-defined-functions.md) [copy](imported/smaltdb/0036-user-defined-functions.md) |
 | 0037 | smaltworks | Releases: independent packages, declared compatibility | accepted | 1 | [record](0037-releases-independent-packages.md) |
 | 0039 | smaltworks | smaltlp's scope and architecture | proposed | 1 | [record](0039-smaltlp-scope-and-architecture.md) |
+| 0039 | smaltml | Phase 2, trees and forests | proposed | 2 | [source](https://github.com/stenhoor/smaltml/blob/main/docs/adr/0039-trees-and-forests.md) |
+| 0040 | smaltml | The SIMD kernels in smaltml, as their own entry point (smaltml-simd retired; WebGPU through smaltkit/gpu) | accepted | 1 | [source](https://github.com/stenhoor/smaltml/blob/main/docs/adr/0040-simd-kernels-in-smaltml.md) [copy](imported/smaltml/0040-simd-kernels-in-smaltml.md) |
 
 ### Repository-local sequences (before or outside the shared rule)
 

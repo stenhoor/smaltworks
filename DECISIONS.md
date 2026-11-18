@@ -320,6 +320,8 @@ Decided by the owner on 2026-11-15, on smaltml ADR 0035 (smaltml-simd).
 - **No WebAssembly in the core.** The engine, the languages and the kits stay TypeScript.
 - **WebAssembly is accepted in plugins, in clearly defined circumstances.** smaltml-simd is the case that prompted it:
   WebAssembly SIMD is the only way to get SIMD in JavaScript, and it comes as a plugin.
+  (Amended 2026-11-18: also in smaltkit's compute, and in a product's optional entry point; smaltml-simd is retired.
+  See "WebGPU and SIMD in smaltkit" and "smaltml's kernels in smaltml" below.)
 - **When JavaScript sets a direction, smalt aligns.** Where the platform's only route to a capability is a particular
   technology, smalt follows the platform, inside a plugin, rather than going without.
 
@@ -338,6 +340,7 @@ when all of these hold:
 Decided by the owner on 2026-11-17.
 
 - **ADR 0035 is accepted:** smaltml-simd, WebAssembly SIMD kernels in a plugin, under the circumstances above.
+  (Superseded in part 2026-11-18 by smaltml ADR 0040: the kernels are smaltml's own, and smaltml-simd is retired.)
 - **Fused multiply-add is an option, off by default.** Plain SIMD gives one result on every machine.
 - **The plugin serves smaltml's current and future needs** without painting itself into a box: smaltml's kernel
   contract (`useKernels`) has a version, so kernels for later phases can be added.
@@ -359,6 +362,7 @@ What the repositories show on 2026-11-18:
 - `smaltkit/simd` is on smaltkit's `main`: WebAssembly SIMD written from TypeScript at run time (`Code`,
   `ModuleBuilder`, `Room`, `simdSupport`, f64x2 exp, log1p and log), with no toolchain and no `.wasm` file.
 - `smaltkit/gpu`, WebGPU compute (the device, pipelines from WGSL, the matrix product), is smaltkit#52, open.
+  (Merged later on 2026-11-18; smaltml uses it from stenhoor/smaltml#55.)
 
 What follows:
 
@@ -372,7 +376,29 @@ What follows:
   without them.
 
 Not yet recorded, for the owner: what becomes of smaltml-simd and of smaltml's `useKernels` contract now that the
-writer is in smaltkit, and whether smaltml's kernels move into smaltml the way smaltlp's live in smaltlp.
+writer is in smaltkit, and whether smaltml's kernels move into smaltml the way smaltlp's live in smaltlp. (Decided
+later the same day: "smaltml's kernels in smaltml", below.)
+
+## smaltml's kernels in smaltml
+
+Decided by the owner on 2026-11-18 (smaltml ADR 0040, which supersedes ADR 0035 in part).
+
+- **smaltml's SIMD kernels are smaltml's own,** in the optional entry point `@smaltworks/smaltml/simd`, moved from
+  smaltml-simd (stenhoor/smaltml#54). The owner asked to remove all dependencies on that repository and chose, of
+  three places (smaltml's own entry point, smaltml's core, smaltkit), smaltml's own entry point. smaltml turns the
+  kernels on by itself where the engine has WebAssembly SIMD; its TypeScript kernels run everywhere else.
+- **smaltml-simd is retired and archived.** Its last PR (stenhoor/smaltml-simd#8) was closed unmerged; its work is in
+  smaltml. smalt-brand records it (stenhoor/smalt-brand#118).
+- **smaltml's WebGPU device and matrix product come from `smaltkit/gpu`** (stenhoor/smaltml#55); smaltml keeps the
+  `device` choice, its error codes and the logistic objective's shader, as it keeps its SIMD kernels.
+- **`useKernels` stays** as smaltml's extension point, unchanged, for other plugins.
+- **Live-compiled code fits the WebAssembly practice** (the owner: "This is live compiled to webassembly, not a
+  precompiled binary. So it fits in the acceptable practice"). The kernels ship as TypeScript that writes WebAssembly
+  bytes, or as WGSL text, which the engine or the GPU driver compiles where it runs: no precompiled binary, no
+  toolchain. So WebAssembly in a product's optional entry point is accepted under the same circumstances as in a
+  plugin (optional, our own code from source, narrow, behind a TypeScript interface, revisited when the platform has
+  a TypeScript route), with "the plugin's repository" in criterion 3 read as the product's.
+- **No runtime dependency follows:** smaltml's build folds the smaltkit modules it uses into its own `dist/`.
 
 ## Running code from other sites: held open
 
