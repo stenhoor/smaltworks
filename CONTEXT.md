@@ -51,7 +51,7 @@ What follows from it, as already decided (the records are linked):
 | [smaltkit](https://github.com/stenhoor/smaltkit) | Kits | The reusable components of the apps | `smaltkit` |
 | [smaltml](https://github.com/stenhoor/smaltml) | Kits | Machine learning | `@smaltworks/smaltml` |
 | [smaltml-simd](https://github.com/stenhoor/smaltml-simd) | Kits (plugin) | WebAssembly SIMD kernels for smaltml (proposed, [ADR 0035](adr/imported/smaltml/0035-simd-kernels-in-a-plugin.md)); empty | – |
-| [smaltlp](https://github.com/stenhoor/smaltlp) | Kits | Linear and mixed-integer programming (proposed, [ADR 0039](adr/0039-smaltlp-scope-and-architecture.md)); empty | – |
+| [smaltlp](https://github.com/stenhoor/smaltlp) | Kits | Linear and mixed-integer programming (proposed, [ADR 0039](adr/0039-smaltlp-scope-and-architecture.md)): `linprog()`, `milp()` and a PuLP-style modelling layer over a sparse dual simplex, compared with scipy, PuLP and HiGHS | – |
 | [smaltty](https://github.com/stenhoor/smaltty) | Base | smalt's TypeScript implementation | `smaltty` (private) |
 | [smaltui](https://github.com/stenhoor/smaltui) | User tools | The query workbench | `smaltui` (private) |
 | [smaltbi](https://github.com/stenhoor/smaltbi) | User tools | Reports and business intelligence | `smaltbi` (private) |

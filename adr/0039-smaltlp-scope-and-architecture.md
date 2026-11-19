@@ -1,8 +1,9 @@
 # ADR 0039: smaltlp's scope and architecture
 
 - **Status:** proposed. The owner's answers of 2026-11-17 (an interview after the research below) are recorded under
-  Decision; the items under "Still to decide" are open. Amended 2026-11-18 (the owner): sections 7 and 8, WebGPU and
-  SIMD run on smaltkit's compute, and smaltlp writes the kernels (DECISIONS.md, "WebGPU and SIMD in smaltkit").
+  Decision. Amended 2026-11-18 (the owner): sections 7 and 8, WebGPU and SIMD run on smaltkit's compute, and smaltlp
+  writes the kernels (DECISIONS.md, "WebGPU and SIMD in smaltkit"). Amended 2026-11-19 (the owner): the items that
+  were "Still to decide" are decided, under "Decided 2026-11-19".
 - **Date:** 2026-11-17
 - **Tier:** 1 (project-wide): it creates a product and a repository.
 - **Repositories:** smaltlp (new); smalt-brand (its brand); smaltdb (a plugin function later, through ADR 0036);
@@ -206,14 +207,26 @@ with a plugin decided later (smaltml-simd grown, a sibling plugin, or none).
 - **A table function for queries:** reads better (`FROM solve_lp(…)`), but ADR 0036's table functions aren't designed
   yet. A struct exploded into rows gets the same result now.
 
-## Still to decide
+## Decided 2026-11-19
 
-1. **A performance goal.** smaltml aims to meet or beat scikit-learn on the CPU. Whether smaltlp sets one against
-   HiGHS, and how it is measured (the Mittelmann benchmarks, Netlib times), is open.
-2. **Interior point:** whether it comes, when, and whether it is where a SIMD kernel first pays off (section 8).
-3. **The first slice:** what phase 1 ships before the rest, as smaltml's phase 1a did. A proposal: the modelling
-   layer, `linprog()`, a bounded dual simplex with LU but no presolve, reading MPS, compare tests on our own models,
-   and the docs site.
-4. **The status model:** scipy's single code, or MathOptInterface's separate termination and solution statuses
-   underneath it.
-5. **The brand** (smalt-brand's call).
+These were "Still to decide" in the first version. The owner answered items 1, 2 and 4 on 2026-11-19; items 3 and 5
+record what has happened since.
+
+1. **A performance goal: tracked, no target yet.** smaltlp is timed beside HiGHS on every solver change, and the
+   ratios are published (smaltlp's `docs/research/benchmarks.md`), with no pass or fail number. A target is set once
+   there is a public benchmark set to hold it to: Netlib and MIPLIB, downloaded in CI (section 6), which this
+   environment's network doesn't reach yet. On 2026-11-19 smaltlp took 1.4 to 2.4 times HiGHS's time with its
+   defaults on smaltlp's own LP benchmark, and 2.7 to 10 times HiGHS's serial dual simplex without presolve.
+2. **Interior point: later, as the first test of a SIMD kernel.** After integer programming is solid, a research spike
+   on an interior-point method, the first place a `smaltkit/simd` kernel is measured (its A·D·Aᵀ, section 8). It
+   ships only where its benchmark shows a gain.
+3. **The first slice** shipped as proposed, then the rest of phase 1 and the start of phase 2, one pull request at a
+   time (stenhoor/smaltlp#1 to #14): the modelling layer in PuLP 4.2's style, `linprog()`, the bounded dual simplex,
+   a sparse LU, presolve, MPS, the compare tests and the docs site; then `milp()` with branch-and-bound, warm starts,
+   and cheaper nodes. Gomory cuts at the root were built and measured slower on every benchmark problem; the owner
+   chose to make each node cheaper first (2026-11-19), and cuts come back only when a benchmark shows they gain.
+4. **The status model: scipy's single code, as built.** `linprog()` and `milp()` give scipy's codes; the modelling
+   layer gives PuLP 4.2's. No separate termination and solution statuses underneath, unless a caller needs more (a
+   feasible solution from a limit, say).
+5. **The brand** is smalt-brand's, decided 2026-11-17 (smalt-brand DECISIONS.md, "smaltlp"): "Small. Alternative.
+   Optimal.", the Aim mark, the Kits layer's jade.
