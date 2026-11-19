@@ -3,7 +3,8 @@
 - **Status:** proposed. The owner's answers of 2026-11-17 (an interview after the research below) are recorded under
   Decision. Amended 2026-11-18 (the owner): sections 7 and 8, WebGPU and SIMD run on smaltkit's compute, and smaltlp
   writes the kernels (DECISIONS.md, "WebGPU and SIMD in smaltkit"). Amended 2026-11-19 (the owner): the items that
-  were "Still to decide" are decided, under "Decided 2026-11-19".
+  were "Still to decide" are decided, under "Decided 2026-11-19"; and section 5, models from tables need neither
+  smaltdb nor smaltdf as a dependency.
 - **Date:** 2026-11-17
 - **Tier:** 1 (project-wide): it creates a product and a repository.
 - **Repositories:** smaltlp (new); smalt-brand (its brand); smaltdb (a plugin function later, through ADR 0036);
@@ -115,8 +116,9 @@ As smaltml ADR 0024 section 2 has it:
 - **Reaching the apps and languages:**
   - **TypeScript first:** smaltnb notebooks, smaltui's TypeScript tabs and flows call it directly.
   - **Models from tables:** helpers build a model from a smaltdb query result or a smaltdf frame (costs, bounds,
-    coefficient rows), and write solutions back as columns. smaltdb and smaltdf are optional peers, used only by
-    those helpers.
+    coefficient rows), and write solutions back as columns. They read a table by its shape (row objects, or
+    `{ columns, rows }`), as smaltdb's `db.query()` and smaltdf's `collect()` give it, so neither is a dependency
+    (amended 2026-11-19, stenhoor/smaltlp#18; the first version had both as optional peers).
   - **Files:** MPS (free and fixed) and CPLEX-LP, read and written, so models move to and from other solvers.
   - **Queries:** any database route is a function a plugin registers through smaltdb ADR 0036, as predict is. It is a
     scalar function returning a struct (smaltdb ADR 0020): for example `solve_lp(model)` giving
