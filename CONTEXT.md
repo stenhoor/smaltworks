@@ -61,7 +61,7 @@ What follows from it, as already decided (the records are linked):
 | [smalton](https://github.com/stenhoor/smalton) | Not yet placed | Ontology; empty | – |
 | [smalt-test](https://github.com/stenhoor/smalt-test) | – | Empty; to be archived (2026-11-15) | – |
 | smaltup | – | The web console: pick components and versions, start working in the browser; no repository yet | – |
-| smaltai | Alongside | The AI agent in the apps; no repository yet ([ADR 0025](adr/imported/smalt-brand/0025-smaltai-agent-gateways-and-actions.md), [0026](adr/imported/smalt-brand/0026-smaltai-in-browser-llm.md)) | – |
+| [smaltai](https://github.com/stenhoor/smaltai) | Alongside | The AI router and the agent in the apps ([ADR 0043](adr/0043-smaltai-router-grants-and-phases.md); [ADR 0025](adr/imported/smalt-brand/0025-smaltai-agent-gateways-and-actions.md), [0026](adr/imported/smalt-brand/0026-smaltai-in-browser-llm.md)) | – |
 | [smalt-brand](https://github.com/stenhoor/smalt-brand) | – | Brand and smaltworks.dev | – |
 | [smaltworks](https://github.com/stenhoor/smaltworks) | – | Direction: this repository | – |
 

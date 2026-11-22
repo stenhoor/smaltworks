@@ -13,5 +13,5 @@ decided; the decision goes to [DECISIONS.md](DECISIONS.md) or an ADR.
 
 | Since | Item | Record |
 | --- | --- | --- |
-| 2026-11-09 | ADR 0025 and 0026: smaltai (proposed) | [0025](adr/imported/smalt-brand/0025-smaltai-agent-gateways-and-actions.md), [0026](adr/imported/smalt-brand/0026-smaltai-in-browser-llm.md) |
+| 2026-11-09 | ADR 0026: smaltai's in-browser engine (proposed; phase 2 of [ADR 0043](adr/0043-smaltai-router-grants-and-phases.md), which decided ADR 0025's open points on 2026-11-22) | [0025](adr/imported/smalt-brand/0025-smaltai-agent-gateways-and-actions.md), [0026](adr/imported/smalt-brand/0026-smaltai-in-browser-llm.md) |
 | 2026-11-17 | ADR 0039: smaltlp (proposed; its "Still to decide" items were decided 2026-11-19): accepting it; and the ADR 0037 number used twice ([adr/README.md](adr/README.md#numbering)) | [0039](adr/0039-smaltlp-scope-and-architecture.md) |
