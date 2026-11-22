@@ -21,7 +21,7 @@ records under [Conflicts](#conflicts), which wait for the owner.
 repository share one sequence, continuing smaltdb's. A new record takes the next number after the highest in any
 repository, open PRs included. Existing numbers are kept as they are; nothing is renumbered.
 
-**The next number is 0041.**
+**The next number is 0044.** (smaltdb's records already reach 0042; checked 2026-11-22.)
 
 - **Tier 1:** `adr/NNNN-short-title.md` in this repository.
 - **Tier 2:** `docs/adr/NNNN-short-title.md` in its repository, with a number from the same sequence, and a row added
@@ -43,6 +43,10 @@ Known irregularities, kept as they are:
   which didn't include smaltworks. Kept as they are, by the rule above.
 - **ADR 0038** is smaltdb's [map type](https://github.com/stenhoor/smaltdb/blob/main/docs/adr/0038-map-type.md),
   not yet in the index below (found on 2026-11-17; its tier is still to assign).
+- **smaltdb's 0039–0042** were found on 2026-11-22, none yet in the index below: [0039 typed values under any](https://github.com/stenhoor/smaltdb/blob/main/docs/adr/0039-typed-values-under-any.md)
+  (so 0039 is used three times), [0040 graph index and relationships](https://github.com/stenhoor/smaltdb/blob/main/docs/adr/0040-graph-index-and-relationships.md)
+  (so 0040 is used twice, with smaltml's), [0041 properties in the graph index](https://github.com/stenhoor/smaltdb/blob/main/docs/adr/0041-properties-in-the-graph-index.md)
+  and [0042 graph writes](https://github.com/stenhoor/smaltdb/blob/main/docs/adr/0042-graph-writes.md). Their tiers are still to assign.
 - **ADR 0024** is in smaltml and in smalt-brand. smaltml's copy is the newer one (amended by ADR 0034 and 0036); the
   copy here is smaltml's. smalt-brand's is out of date.
 
@@ -134,6 +138,7 @@ New records follow [TEMPLATE.md](TEMPLATE.md), the format most existing records 
 | 0039 | smaltworks | smaltlp's scope and architecture | proposed | 1 | [record](0039-smaltlp-scope-and-architecture.md) |
 | 0039 | smaltml | Phase 2, trees and forests | proposed | 2 | [source](https://github.com/stenhoor/smaltml/blob/main/docs/adr/0039-trees-and-forests.md) |
 | 0040 | smaltml | The SIMD kernels in smaltml, as their own entry point (smaltml-simd retired; WebGPU through smaltkit/gpu) | accepted | 1 | [source](https://github.com/stenhoor/smaltml/blob/main/docs/adr/0040-simd-kernels-in-smaltml.md) [copy](imported/smaltml/0040-simd-kernels-in-smaltml.md) |
+| 0043 | smaltworks | smaltai: a router to the user's own gateways, fine-grained grants, and three phases | accepted | 1 | [record](0043-smaltai-router-grants-and-phases.md) |
 
 ### Repository-local sequences (before or outside the shared rule)
 
