@@ -21,7 +21,7 @@ records under [Conflicts](#conflicts), which wait for the owner.
 repository share one sequence, continuing smaltdb's. A new record takes the next number after the highest in any
 repository, open PRs included. Existing numbers are kept as they are; nothing is renumbered.
 
-**The next number is 0044.** (smaltdb's records already reach 0042; checked 2026-11-22.)
+**The next number is 0045.** (smaltml's 0044 took the last; checked 2026-11-23.)
 
 - **Tier 1:** `adr/NNNN-short-title.md` in this repository.
 - **Tier 2:** `docs/adr/NNNN-short-title.md` in its repository, with a number from the same sequence, and a row added
@@ -139,6 +139,7 @@ New records follow [TEMPLATE.md](TEMPLATE.md), the format most existing records 
 | 0039 | smaltml | Phase 2, trees and forests | proposed | 2 | [source](https://github.com/stenhoor/smaltml/blob/main/docs/adr/0039-trees-and-forests.md) |
 | 0040 | smaltml | The SIMD kernels in smaltml, as their own entry point (smaltml-simd retired; WebGPU through smaltkit/gpu) | accepted | 1 | [source](https://github.com/stenhoor/smaltml/blob/main/docs/adr/0040-simd-kernels-in-smaltml.md) [copy](imported/smaltml/0040-simd-kernels-in-smaltml.md) |
 | 0043 | smaltworks | smaltai: a router to the user's own gateways, fine-grained grants, and three phases | accepted | 1 | [record](0043-smaltai-router-grants-and-phases.md) |
+| 0044 | smaltml | Phase 3, gradient-boosted trees with XGBoost's semantics | proposed | 2 | [source](https://github.com/stenhoor/smaltml/blob/main/docs/adr/0044-phase-3-boosted-trees.md) |
 
 ### Repository-local sequences (before or outside the shared rule)
 
