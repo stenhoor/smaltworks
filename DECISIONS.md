@@ -480,6 +480,8 @@ and numbers with no reason behind them. Builds on [ADR 0043](adr/0043-smaltai-ro
 - **Storage is smaltdb.** The log, the grants and the endpoints are kept in a smaltdb database of smaltai's own,
   separate from the user's data. smaltdb is a peer dependency of a separate entry point,
   `@smaltworks/smaltai/smaltdb`, pinned in `packed.json` until 0.9.0 is on npm; the core keeps no runtime dependencies.
+  (Corrected the same day: smaltai reaches that database through smaltts, not the engine directly; see "smaltai
+  reaches the database through smaltts" below.)
 - **Links in the chat are a smaltkit option.** smaltkit's `markdown()` gets an option that shows links and images as
   text with their address (ADR 0043 §6); the chat panel uses it, and smaltai drops its own copy of the rule. The
   smaltkit change is proposed to the owner first.
@@ -492,3 +494,19 @@ and numbers with no reason behind them. Builds on [ADR 0043](adr/0043-smaltai-ro
 - **The log exports as JSON Lines,** one entry a line, written by smaltai's own code.
 - **Still open:** how data sent to the model is marked (the tag and its wording). Researched first, with sources, then
   decided.
+
+## smaltai reaches the database through smaltts
+
+Decided by the owner on 2026-11-23, after a session set out to write smaltai's storage straight to smaltdb's engine
+and plan layer, ignoring the layers the family already has.
+
+- **smaltts is the language for working with the database directly.** smaltai keeps its log, grants and endpoints in
+  its own database through smaltts (tables, `migrate`, `load`, `deleteWhere`, `rows`), not by calling smaltdb's engine
+  or building plans itself. This corrects the "Storage is smaltdb" point of the entry above: the database is still
+  smaltdb, in a database of smaltai's own; the way in is smaltts.
+- **New database functions need a reason.** If smaltai needs something smaltts or smaltdb doesn't offer, the session
+  explains what and why to the owner before anything is added, in smaltts or in smaltdb.
+- **The layers come first.** smaltdb is the engine; the languages (smaltql, smaltdf, smaltts, smaltcy), kits and user
+  tools are built on it ([CONTEXT.md](CONTEXT.md)). A package above the engine uses a language, not the engine.
+- Still to decide: pinning smaltts in smaltai's `packed.json` (smaltts is private, version 0.0.1, its API marked
+  *Prototype*), and the entry point's name. Tracked in smaltai's issue for the storage work.
