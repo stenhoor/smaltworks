@@ -545,3 +545,15 @@ Decided by the owner on 2026-11-23, on the proposal in
   typecheck.
 - **The order:** the four errors are fixed first, in their own smaltts PR; then the build and the typecheck, in another.
   smaltai pins smaltts after that.
+
+## Every choice has a source
+
+Decided by the owner on 2026-11-23, after sessions on smaltai chose by habit (browser storage, then smaltdb's engine
+directly) instead of checking the family's decisions and layers first.
+
+- **Before choosing storage, a format, a number, a helper or a layer,** a session checks smaltworks' standards and
+  decisions and the ADRs, then the layer the work talks to, then the family package meant for the job.
+- **Every PR lists its design choices with their sources;** a choice without one is a question for the owner before it
+  is built.
+- **Recorded in smaltworks only:** in [context/session-rules.md](context/session-rules.md#every-choice-has-a-source),
+  which every repository's `CLAUDE.md` points to. It is not copied into each `CLAUDE.md`.

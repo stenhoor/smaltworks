@@ -60,3 +60,13 @@ Added in smaltworks, 2026-11-15 (the owner; DECISIONS.md, "Facts only").
 - **Check before asserting when checking is cheap.** Prefer running the command or reading the file to reasoning
   about what it probably says.
 - **Correct a wrong fact where you wrote it,** and tell the owner.
+
+### Every choice has a source
+
+Added in smaltworks, 2026-11-23 (the owner; DECISIONS.md, "Every choice has a source").
+
+- **Before choosing, check the family's answer, in this order:** smaltworks' standards and decisions and the ADRs; the
+  layer the work talks to (above the engine, a language: smaltts, smaltql or smaltdf, never the engine directly); then
+  the family package meant for the job (smaltdb, smaltkit, smaltty and the others).
+- **A PR lists its design choices, each with its source:** the standard, decision, ADR or family package it follows.
+- **A choice without a source is a question for the owner,** asked before it is built, not a default.
