@@ -528,3 +528,20 @@ pinning script (`scripts/fetch-packed.mjs`) runs `npm run build` on every pin.
   2026-11-10, in smaltts) and smaltty emits no `.d.ts` files (smaltty's scope), so the family's usual build doesn't
   apply. The proposal covers JavaScript stripped by smaltty into `dist/` and how the types are shipped; the owner
   decides before any smaltts PR. Pinning smaltts in smaltai waits for it.
+  (Decided later the same day: "smaltts follows the family's TypeScript standard" below.)
+
+## smaltts follows the family's TypeScript standard
+
+Decided by the owner on 2026-11-23, on the proposal in
+[stenhoor/smaltai#5](https://github.com/stenhoor/smaltai/issues/5#issuecomment-7108707331).
+
+- **smaltts typechecks on TypeScript 7 and emits `dist/` with its `.d.ts` on TypeScript 6.0.3,** as
+  [STANDARDS.md](STANDARDS.md#typescript-and-browsers) asks of every repository and as smaltkit does. This replaces, for
+  smaltts, its rule of 2026-11-10 that it takes no `typescript` dependency. smaltts keeps using smaltty where it does
+  today (its tests strip and check with it).
+- **Why:** smaltts couldn't be installed as a package (it exports `dist/` but had no build), and checking its source
+  with `tsc` found four errors that smaltty's checker didn't report, under smaltts's own settings and a consumer's, on
+  TypeScript 7 and 6.0.3. A package typed by its `.ts` sources would have put those errors in every consumer's
+  typecheck.
+- **The order:** the four errors are fixed first, in their own smaltts PR; then the build and the typecheck, in another.
+  smaltai pins smaltts after that.
