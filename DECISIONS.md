@@ -557,3 +557,20 @@ directly) instead of checking the family's decisions and layers first.
   is built.
 - **Recorded in smaltworks only:** in [context/session-rules.md](context/session-rules.md#every-choice-has-a-source),
   which every repository's `CLAUDE.md` points to. It is not copied into each `CLAUDE.md`.
+
+## smaltbi's actions for the agent
+
+Decided by the owner on 2026-11-23, in an interview before the proposal for smaltbi's action layer (ADR 0043 §4 and
+§7; ADR 0025 §4).
+
+- **Configuration tables are smaltdb's own `smalt_*` tables** (`smalt_schema`, `smalt_commits`, `smalt_history`,
+  `smalt_matview`, `smalt_stat` and the others smaltdb names). An action whose SQL reads or writes one asks the user,
+  whatever is granted. smaltbi has no configuration tables of its own.
+- **A view the agent creates lives in the report,** as a `{ sql: 'CREATE VIEW …' }` data step: part of the report file,
+  undoable through `DocStore`, and rebuilt whenever the data loads.
+- **Changing the report is typed per object:** one action per change (adding, editing or removing a measure, visual,
+  page, filter, relationship and so on), each with its own input schema checked against smaltbi's types.
+- **The refactor comes first:** the designer's changes, written inline in its UI handlers today, move into shared
+  functions with no change in behaviour, so the actions go through the same code paths a person does (ADR 0025 §4).
+  Then the action layer, in smaltbi beside the code it drives (ADR 0025 §8).
+
