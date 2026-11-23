@@ -510,3 +510,21 @@ and plan layer, ignoring the layers the family already has.
   tools are built on it ([CONTEXT.md](CONTEXT.md)). A package above the engine uses a language, not the engine.
 - Still to decide: pinning smaltts in smaltai's `packed.json` (smaltts is private, version 0.0.1, its API marked
   *Prototype*), and the entry point's name. Tracked in smaltai's issue for the storage work.
+  (Decided later the same day: "smaltai's storage: the entry point, the interfaces and smaltts's build" below.)
+
+## smaltai's storage: the entry point, the interfaces and smaltts's build
+
+Decided by the owner on 2026-11-23, on [stenhoor/smaltai#5](https://github.com/stenhoor/smaltai/issues/5), after a
+check found that smaltts can't be installed as a package yet: it exports `dist/` but has no `build` script, and the
+pinning script (`scripts/fetch-packed.mjs`) runs `npm run build` on every pin.
+
+- **The entry point is `@smaltworks/smaltai/store`,** named for what it does, as smaltkit's modules are. It replaces
+  `@smaltworks/smaltai/smaltdb` in "smaltai: storage, what grants limit, and the core package's choices" above.
+- **The app opens smaltai's database** with the engine loading it already has, and passes it to smaltai, which attaches
+  smaltts. smaltai ships no worker.
+- **smaltai's storage interfaces are asynchronous:** writing a log entry and reading or changing grants and endpoints
+  return promises, and the agent waits for each request to be logged before it is sent (ADR 0043 §5).
+- **smaltts's build is proposed first, with no code.** smaltts takes no `typescript` dependency (the owner's decision of
+  2026-11-10, in smaltts) and smaltty emits no `.d.ts` files (smaltty's scope), so the family's usual build doesn't
+  apply. The proposal covers JavaScript stripped by smaltty into `dist/` and how the types are shipped; the owner
+  decides before any smaltts PR. Pinning smaltts in smaltai waits for it.
