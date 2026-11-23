@@ -465,3 +465,30 @@ Decided by the owner on 2026-11-15, on the [dependency audit](reviews/2026-11-15
 - **The apps may keep loading the brand fonts from Google Fonts,** as a recorded exception
   ([EXCEPTIONS.md](EXCEPTIONS.md)): they are fonts, not code, and the owner isn't concerned about it. It applies to
   smaltui, smaltbi, smaltnb and smaltfl. smaltworks.dev's fonts are smalt-brand's call.
+
+## smaltai: storage, what grants limit, and the core package's choices
+
+Decided by the owner on 2026-11-23, in an interview after a review of smaltai's merged core package (stenhoor/smaltai#3)
+found choices made without a source: browser storage picked by habit, a second copy of smaltkit's Markdown escaping,
+and numbers with no reason behind them. Builds on [ADR 0043](adr/0043-smaltai-router-grants-and-phases.md).
+
+- **Grants limit the model, not code already on the page.** Every smalt page on `stenhoor.github.io` shares one origin
+  and its storage ([ADR 0025](adr/imported/smalt-brand/0025-smaltai-agent-gateways-and-actions.md) §3), so code that
+  runs there can rewrite grants; it can also read every database and call any address directly, so a raised grant
+  gives it nothing new. The docs say what grants protect. **Code the model writes** (a notebook cell, a TypeScript tab)
+  **is a write action** and never runs unless granted or approved, and **no action can change grants.**
+- **Storage is smaltdb.** The log, the grants and the endpoints are kept in a smaltdb database of smaltai's own,
+  separate from the user's data. smaltdb is a peer dependency of a separate entry point,
+  `@smaltworks/smaltai/smaltdb`, pinned in `packed.json` until 0.9.0 is on npm; the core keeps no runtime dependencies.
+- **Links in the chat are a smaltkit option.** smaltkit's `markdown()` gets an option that shows links and images as
+  text with their address (ADR 0043 §6); the chat panel uses it, and smaltai drops its own copy of the rule. The
+  smaltkit change is proposed to the owner first.
+- **Errors:** `SmaltaiError`, with codes prefixed `SMALTAI_` (as smaltcy prefixes `SMALTCY_`). The family has no single
+  convention (smaltdb, smaltml, smaltcy, smaltdf and smaltkit each name theirs differently).
+- **Defaults:** a sample carries 100 rows unless the user sets another number; the agent stops after a number of model
+  turns the user sets, 20 to start.
+- **The warning that rows may leave the browser** (ADR 0025 §5) is shown once, when the user grants sample rows or full
+  data for an endpoint and database, as part of the grant they confirm.
+- **The log exports as JSON Lines,** one entry a line, written by smaltai's own code.
+- **Still open:** how data sent to the model is marked (the tag and its wording). Researched first, with sources, then
+  decided.
