@@ -574,3 +574,15 @@ Decided by the owner on 2026-11-23, in an interview before the proposal for smal
   functions with no change in behaviour, so the actions go through the same code paths a person does (ADR 0025 §4).
   Then the action layer, in smaltbi beside the code it drives (ADR 0025 §8).
 
+Decided by the owner on 2026-11-24, in an interview on the refactor (stenhoor/smaltbi#65):
+
+- **A change whose target isn't in the report is an error.** The shared functions (smaltbi's `src/core/edits.ts`) throw
+  an `EditError` (`no page "page7"`) and change nothing, and `DocStore.change` keeps no undo step for it; the action
+  layer passes the message to the agent. The designer checks first where undo can take a target away.
+- **An emptied number option is taken off,** so its default applies at once, as it does when the report is opened
+  again (until now the Format tab set it to `undefined`). Its own PR, after the refactor.
+- **The measure dialog refuses a name the model already has,** as the quick-measure dialog does. Its own PR, after the
+  refactor.
+- **smaltbi may add smaltai** (`@smaltworks/smaltai`, pinned in `packed.json`) for the action layer: the family's own
+  package, MIT, with no runtime dependencies (the rule "ask before adding outside code": asked and approved).
+
