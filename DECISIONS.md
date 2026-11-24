@@ -586,6 +586,18 @@ Decided by the owner on 2026-11-24, in an interview on the refactor (stenhoor/sm
 - **A calculated column can't take a name its table already has** (asked when that PR was built): any field `table.Name`
   finds, that is a column of the data, another calculated column, a measure or a hierarchy, whatever its case. In the
   same PR as the measure names.
+- **The order of the agent's work in smaltbi:** the report actions first (pages, visuals, filters, measures, calculated
+  columns, relationships, and reading the report and its tables), then the data actions (queries within the grants,
+  views), then the chat panel in smaltkit, whose design questions come to the owner when it starts.
+- **Report changes ask first until the user allows them:** an action that changes the report is not granted by
+  default, though every change can be undone; the user allows it once or for good, and can take that back in the
+  grants panel.
+- **No colliding names, whatever their case:** a measure's name is no other measure's and no field of its table (a
+  column of the data, a calculated column, a hierarchy); a calculated column's and a hierarchy's name is no other field
+  of its table. A name that collides is refused with an error, in the designer and for the agent alike. The sample
+  report's measure `Target`, which collided with its table's column `target`, is renamed `Budget target`.
+- **The pin script's fix** (a pinned package is built with the other pins it names as peers) goes to the other
+  repositories that have the script once smaltai's copy is merged.
 - **smaltbi may add smaltai** (`@smaltworks/smaltai`, pinned in `packed.json`) for the action layer: the family's own
   package, MIT, with no runtime dependencies (the rule "ask before adding outside code": asked and approved).
 
