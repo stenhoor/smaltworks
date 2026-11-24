@@ -583,6 +583,9 @@ Decided by the owner on 2026-11-24, in an interview on the refactor (stenhoor/sm
   again (until now the Format tab set it to `undefined`). Its own PR, after the refactor.
 - **The measure dialog refuses a name the model already has,** as the quick-measure dialog does. Its own PR, after the
   refactor.
+- **A calculated column can't take a name its table already has** (asked when that PR was built): any field `table.Name`
+  finds, that is a column of the data, another calculated column, a measure or a hierarchy, whatever its case. In the
+  same PR as the measure names.
 - **smaltbi may add smaltai** (`@smaltworks/smaltai`, pinned in `packed.json`) for the action layer: the family's own
   package, MIT, with no runtime dependencies (the rule "ask before adding outside code": asked and approved).
 
